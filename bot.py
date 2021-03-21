@@ -24,9 +24,9 @@ os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 
 extensions = [os.path.join(dp, f) for dp, dn, fn in os.walk("cogs") for f in fn] + \
              [os.path.join(dp, f) for dp, dn, fn in os.walk("events") for f in fn] + \
-             ["jishaku"]
+             ["jishaku", "initialize"]
 for file in extensions[:]:
-    if not file.endswith(".py") and file not in ["jishaku"]:  # jishaku is a special case
+    if not file.endswith(".py") and file not in ["jishaku", "initialize"]:  # these are special cases
         extensions.remove(file)
 
 for extension in extensions:
