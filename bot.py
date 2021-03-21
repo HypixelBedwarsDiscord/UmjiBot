@@ -7,7 +7,7 @@ import discord
 import hypixelaPY
 
 from config import Config
-from data import Data
+from data import DataConnect
 from prestiges import Prestiges
 from static import Static
 
@@ -18,7 +18,6 @@ bot = commands.Bot(
     allowed_mentions=discord.AllowedMentions(everyone=False, replied_user=False)
 )
 bot.config = Config()
-bot.data = Data()
 bot.prestiges = Prestiges()
 bot.static = Static()
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
@@ -42,6 +41,7 @@ for extension in extensions:
 
 async def start():
     bot.hypixel = await hypixelaPY.Hypixel(bot.config.keys.hypixel)
+    bot.data = await DataConnect(bot.config.keys.postgres)
     await bot.start(bot.config.keys.token)
 
 

@@ -26,7 +26,7 @@ class Bedwars(commands.Cog):
     @commands.command(aliases=["v"])
     @commands.check(check)
     async def verify(self, ctx: commands.Context, query: str):
-        if user := self.bot.data.get(ctx.author.id):
+        if user := await self.bot.data.get(ctx.author.id):
             if bool(user.uuid):
                 return await ctx.reply(embed=self.bot.static.embed(ctx, "You are already verified!"))
             elif user.blacklisted:
@@ -35,14 +35,14 @@ class Bedwars(commands.Cog):
         # guild = await self.bot.hypixel.guild.get(name=player.name)
         if str(ctx.author) != player.social.discord:
             return await ctx.reply(embed=self.bot.static.embed(ctx, "Set your Discord name and tag on Hypixel first!"))
-        self.bot.data.set(ctx.author.id, "uuid", player.uuid)
+        await self.bot.data.set(ctx.author.id, "uuid", player.uuid)
         await self._verify(ctx.author, player)
         return await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified you as {ctx.author.mention}"))
 
     @commands.command(aliases=["bwupdate", "u"])
     @commands.check(check)
     async def update(self, ctx: commands.Context):
-        user = self.bot.data.get(ctx.author.id)
+        user = await self.bot.data.get(ctx.author.id)
         if not user or not bool(user.uuid):
             return await ctx.reply(embed=self.bot.static.embed(ctx, "You are not verified! Verify first with "
                                                                     "`r.verify <your-ign>`"))
@@ -54,10 +54,9 @@ class Bedwars(commands.Cog):
     @commands.check(check)
     @commands.has_role(STAFF_ROLE_ID)
     async def forceupdate(self, ctx: commands.Context, target: discord.Member):
-        user = self.bot.data.get(target.id)
+        user = await self.bot.data.get(target.id)
         if not user or not bool(user.uuid):
-            return await ctx.reply(embed=self.bot.static.embed(ctx, f"{target.mention} is not verified! You are staff "
-                                                                    f"so you should know what to do, fuck you!"))
+            return await ctx.reply(embed=self.bot.static.embed(ctx, f"{target.mention} is not verified!"))
         player = await self.bot.hypixel.player.get(uuid=user.uuid)
         await self._verify(target, player)
         return await ctx.reply(embed=self.bot.static.embed(ctx, f"Updated {target.mention}'s roles and nickname!"))
@@ -68,19 +67,29 @@ class Bedwars(commands.Cog):
     async def forceverify(self, ctx: commands.Context, target: discord.Member, query: str):
         player = await self.bot.hypixel.player.get(query=query)
         # guild = await self.bot.hypixel.guild.get(name=player.name)
-        self.bot.data.set(target.id, "uuid", player.uuid)
+        await self.bot.data.set(target.id, "uuid", player.uuid)
         await self._verify(target, player)
         return await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"))
 
-    @commands.command(aliases=["forceunverify", "fuv"])
+    @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.check(check)
     @commands.has_role(STAFF_ROLE_ID)
     async def unverify(self, ctx: commands.Context, target: discord.Member):
         # guild = await self.bot.hypixel.guild.get(name=player.name)
-        data = self.bot.data.delete(target.id, "uuid")
+        data = await self.bot.data.get(target.id)
         if not data: return await ctx.reply(embed=self.bot.static.embed(ctx, f"{target.mention} was not verified!"))
+        await self.bot.data.set(target.id, "uuid", None)
         await self._unverify(target)
         return await ctx.reply(embed=self.bot.static.embed(ctx, f"Unverified {target.mention}"))
+
+    @commands.command()
+    @commands.check(check)
+    @commands.has_role(STAFF_ROLE_ID)
+    async def blacklist(self, ctx: commands.Context, target: discord.Member):
+        data = await self.bot.data.get(target.id)
+        action = not data.blacklisted
+        await self.bot.data.set(target.id, "blacklist", action)
+        return await ctx.reply(embed=self.bot.static.embed(ctx, f"Blacklisted {target.mention}" if action else f"Unblacklisted {target.mention}"))
 
     async def _verify(self, target: discord.Member, player):
         index = player.bedwars.prestige.star_index
@@ -93,6 +102,7 @@ class Bedwars(commands.Cog):
                 if not old.role: old.get(self.guild)
                 if old.role in target.roles: await target.remove_roles(old)
         await target.add_roles(role)
+        await target.remove_roles(self.need_username_role)
 
     async def _unverify(self, target: discord.Member):
         for role in self.bot.prestiges.all:

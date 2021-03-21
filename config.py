@@ -14,3 +14,4 @@ class Keys:
     def __init__(self):
         self.token = config["keys"]["token"]
         self.hypixel = config["keys"]["hypixel"]
+        self.postgres = config["keys"]["postgres"]
