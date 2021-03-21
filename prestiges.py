@@ -5,7 +5,7 @@ class Prestiges:
         self.gold = Role(396837663660834827, "✨")
         self.diamond = Role(396837745097441280, "💫")
         self.emerald = Role(406150428947120159, "☄")
-        self.sapphire = Role(428317168728276992, "")
+        self.sapphire = Role(428317168728276992, "✩")
         self.ruby = Role(428317393236787200, "✵")
         self.crystal = Role(439863000988647425, "✫")
         self.opal = Role(452908345133629440, "✰")

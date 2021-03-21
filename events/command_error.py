@@ -7,6 +7,15 @@ import discord
 import hypixelaPY
 
 
+INVALID_MINECRAFT_ACCOUNT_ERROR = """
+{user}, player not found.
+
+The username you entered could not be found on Hypixel.
+   - Make sure you typed your username correctly (the casing does not matter).
+   - Try joining Hypixel before running this command again. If you can't connect (e.g., "failed to authenticate"), try signing out of Minecraft from the launcher, signing back in, and rejoin Hypixel.
+   - Make sure you typed your Minecraft username and not your Discord username/tag."""
+
+
 class CommandError(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,7 +33,11 @@ class CommandError(commands.Cog):
                 embed=ctx.bot.static.embed(ctx, f"{ctx.author.mention}, you are sending commands too fast"))
         elif isinstance(error, hypixelaPY.NoPlayerFoundError):
             return await ctx.reply(
-                embed=ctx.bot.static.embed(ctx, f"{ctx.author.mention}, \"{error}\" is not a valid Minecraft account"))
+                embed=ctx.bot.static.embed(ctx, f"""{ctx.author.mention}, player not found.
+The username you entered could not be found on Hypixel.
+   - Make sure you typed your username correctly (the casing does not matter).
+   - Try joining Hypixel before running this command again. If you can't connect (e.g., "failed to authenticate"), try signing out of Minecraft from the launcher, signing back in, and rejoin Hypixel.
+   - Make sure you typed your Minecraft username and not your Discord username/tag."""))
         elif isinstance(error, commands.MissingRequiredArgument):
             return await ctx.reply(
                 embed=self.bot.static.embed(ctx, f"{ctx.author.mention}, `{error.param}` is a required "

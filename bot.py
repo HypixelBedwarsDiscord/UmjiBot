@@ -11,18 +11,20 @@ from data import DataConnect
 from prestiges import Prestiges
 from static import Static
 
+config_ = Config()
 bot = commands.Bot(
     command_prefix="r.",
-    owner_id=0,
+    owner_id=config_.owner,
     intents=discord.Intents.all(),
     allowed_mentions=discord.AllowedMentions(everyone=False, replied_user=False)
 )
-bot.config = Config()
+bot.config = config_
 bot.prestiges = Prestiges()
 bot.static = Static()
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 
 extensions = [os.path.join(dp, f) for dp, dn, fn in os.walk("cogs") for f in fn] + \
+             [os.path.join(dp, f) for dp, dn, fn in os.walk("commands") for f in fn] + \
              [os.path.join(dp, f) for dp, dn, fn in os.walk("events") for f in fn] + \
              ["jishaku", "initialize"]
 for file in extensions[:]:
@@ -47,6 +49,7 @@ async def start():
 
 async def stop():
     await bot.logout()
+
 
 if __name__ == "__main__":
     try:
