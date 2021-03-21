@@ -22,6 +22,7 @@ class CommandError(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        if not self.bot.is_ready: return
         error = getattr(error, "original", error)
         ignored = (commands.CommandNotFound,
                    commands.CheckFailure
@@ -39,9 +40,12 @@ The username you entered could not be found on Hypixel.
    - Try joining Hypixel before running this command again. If you can't connect (e.g., "failed to authenticate"), try signing out of Minecraft from the launcher, signing back in, and rejoin Hypixel.
    - Make sure you typed your Minecraft username and not your Discord username/tag."""))
         elif isinstance(error, commands.MissingRequiredArgument):
+            if ctx.command.name == "verify":
+                return await ctx.reply(
+                    embed=self.bot.static.embed(ctx, f"You must provide a Minecraft Username to verify with. For "
+                                                     f"example, `r.verify myerfire`"))
             return await ctx.reply(
-                embed=self.bot.static.embed(ctx, f"{ctx.author.mention}, `{error.param}` is a required "
-                                                 f"argument that is missing"))
+                embed=self.bot.static.embed(ctx, f"{error.param} is a required argument that is missing"))
         await ctx.reply(embed=self.bot.static.embed(ctx, str(error)))
         error_traceback = "".join(traceback.format_exception(type(error), error, error.__traceback__))
         await ctx.bot.config.channels.errors.send(embed=discord.Embed(
