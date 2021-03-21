@@ -13,4 +13,4 @@ class Config:
 class Keys:
     def __init__(self):
         self.token = config["keys"]["token"]
-        self.hypixel = config["keys"]["key"]
+        self.hypixel = config["keys"]["hypixel"]

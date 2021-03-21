@@ -1,39 +1,5 @@
 class Prestiges:
     def __init__(self):
-        self.get = [
-            self.stone,
-            self.iron,
-            self.gold,
-            self.diamond,
-            self.emerald,
-            self.sapphire,
-            self.ruby,
-            self.crystal,
-            self.opal,
-            self.amethyst,
-            self.rainbow,
-            self.prime.iron,
-            self.prime.gold,
-            self.prime.diamond,
-            self.prime.emerald,
-            self.sapphire,
-            self.prime.ruby,
-            self.prime.crystal,
-            self.prime.opal,
-            self.prime.amethyst,
-            self.mirror,
-            self.light,
-            self.dawn,
-            self.dusk,
-            self.air,
-            self.wind,
-            self.nebula,
-            self.thunder,
-            self.earth,
-            self.water,
-            self.fire
-        ]
-
         self.stone = Role(396837260378505216, "⭐")
         self.iron = Role(396837540612800544, "🌟")
         self.gold = Role(396837663660834827, "✨")
@@ -60,6 +26,40 @@ class Prestiges:
         self.water = Role(802236232876687391, "✬")
         self.fire = Role(802236235388026913, "✬")
 
+        self.all = [
+            self.stone,
+            self.iron,
+            self.gold,
+            self.diamond,
+            self.emerald,
+            self.sapphire,
+            self.ruby,
+            self.crystal,
+            self.opal,
+            self.amethyst,
+            self.rainbow,
+            self.prime.iron,
+            self.prime.gold,
+            self.prime.diamond,
+            self.prime.emerald,
+            self.prime.sapphire,
+            self.prime.ruby,
+            self.prime.crystal,
+            self.prime.opal,
+            self.prime.amethyst,
+            self.mirror,
+            self.light,
+            self.dawn,
+            self.dusk,
+            self.air,
+            self.wind,
+            self.nebula,
+            self.thunder,
+            self.earth,
+            self.water,
+            self.fire
+        ]
+
 
 class Prime:
     def __init__(self):
@@ -80,5 +80,5 @@ class Role:
         self.star = star
         self.role = None
 
-    def get(self, bot):
-        self.role = bot.get_role(self.id)
+    def get(self, guild):
+        self.role = guild.get_role(self.id)

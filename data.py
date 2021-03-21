@@ -1,4 +1,5 @@
 from tinydb import TinyDB, Query
+from tinydb.operations import delete
 
 
 class Data:
@@ -14,8 +15,17 @@ class Data:
         if not data: return
         return Player(data)
 
+    def delete(self, id_: int, key):
+        if value := self.data.get(self.query.id == id_).get(key):
+            self.data.update(delete(key), self.query.id == id_)
+            return value
+
 
 class Player:
     def __init__(self, data):
         self.uuid = data.get("uuid")
         self.blacklisted = data.get("blacklisted", False)
+
+    @staticmethod
+    def default():
+        return Player({})
