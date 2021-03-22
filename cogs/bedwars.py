@@ -257,8 +257,8 @@ class Bedwars(commands.Cog):
             name="Minecraft Account",
             value=f"[{player.name}]({self._plancke_url(player.uuid)})"
         ))
-        await ctx.message.delete()
-        return await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
+        await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
+        return await ctx.message.delete()
 
     @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
