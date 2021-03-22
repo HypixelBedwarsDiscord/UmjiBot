@@ -28,6 +28,10 @@ class Static:
             description=description
         )
 
+    @staticmethod
+    def plancke_url(uuid):
+        return f"https://plancke.io/hypixel/player/stats/{uuid}"
+
 
 class Paginators:
     def __init__(self):

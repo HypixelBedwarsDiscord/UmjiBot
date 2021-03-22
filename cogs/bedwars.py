@@ -126,7 +126,7 @@ class Bedwars(commands.Cog):
                 value=ctx.me.mention
             ).add_field(
                 name="Minecraft Account",
-                value=f"[{player.name}]({self._plancke_url(player.uuid)})"
+                value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
             ))
             return await ctx.reply(embed=self.bot.static.embed(ctx, f"You have not linked your Discord tag on Hypixel!\n"
                                                                     f"1. Go to any lobby.\n"
@@ -177,7 +177,7 @@ class Bedwars(commands.Cog):
             value=ctx.me.mention
         ).add_field(
             name="Minecraft Account",
-            value=f"[{player.name}]({self._plancke_url(player.uuid)})"
+            value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         await ctx.message.delete()
         return await self.verification.purge(check=lambda m: m.author.id == ctx.author.id)
@@ -205,7 +205,7 @@ class Bedwars(commands.Cog):
             value=ctx.me.mention
         ).add_field(
             name="Minecraft Account",
-            value=f"[{player.name}]({self._plancke_url(player.uuid)})"
+            value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         return await ctx.reply(embed=self.bot.static.embed(ctx, "Updated your roles and nickname!"))
 
@@ -231,7 +231,7 @@ class Bedwars(commands.Cog):
             value=ctx.author.mention
         ).add_field(
             name="Minecraft Account",
-            value=f"[{player.name}]({self._plancke_url(player.uuid)})"
+            value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         return await ctx.reply(embed=self.bot.static.embed(ctx, f"Updated {target.mention}'s roles and nickname!"))
 
@@ -255,7 +255,7 @@ class Bedwars(commands.Cog):
             value=ctx.author.mention
         ).add_field(
             name="Minecraft Account",
-            value=f"[{player.name}]({self._plancke_url(player.uuid)})"
+            value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
         await ctx.message.delete()
@@ -390,15 +390,11 @@ class Bedwars(commands.Cog):
                 value=message.guild.me.mention
             ).add_field(
                 name="Minecraft Account",
-                value=f"[{player.name}]({self._plancke_url(player.uuid)})"
+                value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
             ))
         except discord.Forbidden:
             pass
         self.auto[message.author.id] = time.time()
-
-    @staticmethod
-    def _plancke_url(uuid):
-        return f"https://plancke.io/hypixel/player/stats/{uuid}"
 
 
 def setup(bot):
