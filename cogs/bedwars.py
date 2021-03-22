@@ -1,6 +1,6 @@
 import time
 
-from discord.ext import commands
+from discord.ext import commands, menus
 import discord
 
 import hypixelaPY
@@ -258,7 +258,8 @@ class Bedwars(commands.Cog):
             value=f"[{player.name}]({self._plancke_url(player.uuid)})"
         ))
         await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
-        return await ctx.message.delete()
+        await ctx.message.delete()
+        return await self.verification.purge(check=lambda m: m.author.id == target.id)
 
     @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -345,6 +346,26 @@ class Bedwars(commands.Cog):
             if role in target.roles: await target.remove_roles(role)
         await target.add_roles(self.need_username_role)
         await target.edit(nick=None)
+
+    @commands.command()
+    @commands.max_concurrency(1, per=commands.BucketType.user)
+    @commands.check(guild_check)
+    @commands.has_role(ROLES.get("STAFF"))
+    async def vcs(self, ctx: commands.Context, limit=100):
+        result = []
+        async for message in self.verification.history(limit=limit):
+            words = message.content.split(" ")
+            if len(words) < 2: continue
+            if words[0] == "r.bwverify" or words[0] == "r.verify":
+                result.append(message)
+        if not result:
+            return await ctx.reply(embed=self.bot.static.embed(ctx, "No verification attemps found!"))
+        result = [f"{message.author.mention}: {message.content}" for message in result]
+        await menus.MenuPages(source=self.bot.static.paginators.regular(result, ctx, discord.Embed(
+            title="Verification Attemps",
+            color=ctx.author.color,
+            timestamp=ctx.message.created_at,
+        ))).start(ctx)
 
     @commands.Cog.listener()
     async def on_message(self, message):
