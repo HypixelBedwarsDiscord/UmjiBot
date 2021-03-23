@@ -36,7 +36,8 @@ class Purge(commands.Cog):
         start = await ctx.reply(embed=self.bot.static.embed(ctx, f"Starting purge for {limit} messages. This could "
                                                                  f"take a LONG time if the messages being deleted are "
                                                                  f"over 14 days old."))
-        await ctx.channel.purge(limit=limit + 1, check=lambda m: m.id != start.id)
+        await ctx.channel.purge(limit=limit + 2, check=lambda m: m.id != start.id)
+        # +2 because one is the command message, one is the start message
         await start.delete()
         return await ctx.send(f"Purged {limit} messages", delete_after=5)
 
