@@ -33,9 +33,21 @@ class Help(commands.Cog):
     @commands.command()
     @commands.max_concurrency(1, per=commands.BucketType.user)
     async def help(self, ctx):
+        if self.bot.static.roles.staff in ctx.author.roles:
+            message = "`r.update (r.u)`: Updates your star, nickname, and roles\n" \
+                      "`r.verify`: Verifies you with your Minecraft Account Name\n" \
+                      "**__Staff Commands__**:\n" \
+                      "`r.fv <user-id> <ign>` Force verifies someone\n" \
+                      "`r.fu <user-id>` Force updates someone\n" \
+                      "`r.fvm <message-id>` Force verifies someone based off a verify attempt of a message **FROM THEM**\n" \
+                      "`r.fuv <user-id>` Force unverifies someone\n" \
+                      "`r.blacklist` <user-id> Blacklists someone from using `r.verify`"
+        else:
+            message = "`r.update (r.u)`: Updates your star, nickname, and roles\n" \
+                      "`r.verify`: Verifies you with your Minecraft Account Name\n"
         await ctx.reply(embed=discord.Embed(
             name="Help",
-            description=f"`r.update (r.u)`: Updates your star, nickname, and roles",
+            description=message,
             color=ctx.author.color,
             timestamp=ctx.message.created_at
         ).set_author(

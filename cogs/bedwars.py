@@ -59,11 +59,6 @@ class Bedwars(commands.Cog):
     async def _initialize(self):
         await self.bot.wait_until_ready()
         self.guild = self.bot.get_guild(384804710110199809)
-        self.logs = self.guild.get_channel(672475663994716178)
-        self.verification = self.bot.get_channel(422259585798242314)
-        self.staff_role = self.guild.get_role(ROLES.get("STAFF"))
-        self.need_username_role = self.guild.get_role(ROLES.get("NEED_USERNAME"))
-        self.need_usernames_role = self.guild.get_role(ROLES.get("NEED_USERNAMES"))
         self.guild_roles = {
             "5c8609a877ce849ebc770053": self.guild.get_role(ROLES["GUILDS"].get("5c8609a877ce849ebc770053")),
             "5af718d40cf2cbe7a9eeb063": self.guild.get_role(ROLES["GUILDS"].get("5af718d40cf2cbe7a9eeb063")),
@@ -85,7 +80,7 @@ class Bedwars(commands.Cog):
     async def verify(self, ctx: commands.Context, query: str):
         if user := await self.bot.data.get(ctx.author.id):
             if bool(user.uuid):
-                await self.logs.send(embed=discord.Embed(
+                await self.bot.static.channels.logs.send(embed=discord.Embed(
                     title="Verification Failed",
                     color=discord.Color.red(),
                     timestamp=ctx.message.created_at,
@@ -100,7 +95,7 @@ class Bedwars(commands.Cog):
                 return await ctx.reply(embed=self.bot.static.embed(ctx, "You are already verified! Type `r.u` to "
                                                                         "update!"))
             elif user.blacklisted:
-                await self.logs.send(embed=discord.Embed(
+                await self.bot.static.channels.logs.send(embed=discord.Embed(
                     title="Verification Failed",
                     color=discord.Color.red(),
                     timestamp=ctx.message.created_at,
@@ -115,7 +110,7 @@ class Bedwars(commands.Cog):
                 return await ctx.reply(embed=self.bot.static.embed(ctx, "You are blacklisted from verification!"))
         player = await self.bot.hypixel.player.get(query=query)
         if not bool(player.social.discord):
-            await self.logs.send(embed=discord.Embed(
+            await self.bot.static.channels.logs.send(embed=discord.Embed(
                 title="Verification Failed",
                 color=discord.Color.red(),
                 timestamp=ctx.message.created_at,
@@ -130,21 +125,22 @@ class Bedwars(commands.Cog):
                 name="Minecraft Account",
                 value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
             ))
-            return await ctx.reply(embed=self.bot.static.embed(ctx, f"You have not linked your Discord tag on Hypixel!\n"
-                                                                    f"1. Go to any lobby.\n"
-                                                                    f"2. Right click your player head.\n"
-                                                                    f"3. Click the social media menu. (Twitter icon)\n"
-                                                                    f"4. Click the Discord icon.\n"
-                                                                    f"5. Paste your Discord tag when asked (e.g. "
-                                                                    f"Lite#0001).\n "
-                                                                    f"6. Head back to <#422259585798242314> and run "
-                                                                    f"`r.verify <username>` with username being your "
-                                                                    f"Minecraft username.\n\n"
-                                                                    f"--> Example: `r.verify Poggos`\n\n"
-                                                                    f"If you need more help, view <#614994890790666242>"))
+            return await ctx.reply(
+                embed=self.bot.static.embed(ctx, f"You have not linked your Discord tag on Hypixel!\n"
+                                                 f"1. Go to any lobby.\n"
+                                                 f"2. Right click your player head.\n"
+                                                 f"3. Click the social media menu. (Twitter icon)\n"
+                                                 f"4. Click the Discord icon.\n"
+                                                 f"5. Paste your Discord tag when asked (e.g. "
+                                                 f"Lite#0001).\n "
+                                                 f"6. Head back to <#422259585798242314> and run "
+                                                 f"`r.verify <username>` with username being your "
+                                                 f"Minecraft username.\n\n"
+                                                 f"--> Example: `r.verify Poggos`\n\n"
+                                                 f"If you need more help, view <#614994890790666242>"))
         elif str(
                 ctx.author) != player.social.discord and f"{str(ctx.author.id)[-6:]}#{ctx.author.discriminator}" != player.social.discord:
-            await self.logs.send(embed=discord.Embed(
+            await self.bot.static.channels.logs.send(embed=discord.Embed(
                 title="Verification Failed",
                 color=discord.Color.red(),
                 timestamp=ctx.message.created_at,
@@ -167,7 +163,7 @@ class Bedwars(commands.Cog):
         await self.bot.data.set(ctx.author.id, "uuid", player.uuid)
         await self._verify(ctx.author, player)
         await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified you as {ctx.author.mention}"), delete_after=5)
-        await self.logs.send(embed=discord.Embed(
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
             title="Member Verified",
             color=discord.Color.green(),
             timestamp=ctx.message.created_at
@@ -182,7 +178,7 @@ class Bedwars(commands.Cog):
             value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         await ctx.message.delete()
-        return await self.verification.purge(check=lambda m: m.author.id == ctx.author.id)
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == ctx.author.id)
 
     @commands.command(aliases=["bwupdate", "u"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -195,7 +191,7 @@ class Bedwars(commands.Cog):
                                                                     "`r.verify <your-ign>`"))
         player = await self.bot.hypixel.player.get(uuid=user.uuid)
         await self._verify(ctx.author, player)
-        await self.logs.send(embed=discord.Embed(
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
             title="Member Updated (On User Command)",
             color=discord.Color.green(),
             timestamp=ctx.message.created_at,
@@ -221,7 +217,7 @@ class Bedwars(commands.Cog):
             return await ctx.reply(embed=self.bot.static.embed(ctx, f"{target.mention} is not verified!"))
         player = await self.bot.hypixel.player.get(uuid=user.uuid)
         await self._verify(target, player)
-        await self.logs.send(embed=discord.Embed(
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
             title="Member Force Updated",
             color=discord.Color.green(),
             timestamp=ctx.message.created_at,
@@ -245,7 +241,7 @@ class Bedwars(commands.Cog):
         player = await self.bot.hypixel.player.get(query=query)
         await self.bot.data.set(target.id, "uuid", player.uuid)
         await self._verify(target, player)
-        await self.logs.send(embed=discord.Embed(
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
             title="Member Force Verified",
             color=discord.Color.green(),
             timestamp=ctx.message.created_at
@@ -261,7 +257,7 @@ class Bedwars(commands.Cog):
         ))
         await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
         await ctx.message.delete()
-        return await self.verification.purge(check=lambda m: m.author.id == target.id)
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
 
     @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -273,7 +269,7 @@ class Bedwars(commands.Cog):
             embed=self.bot.static.embed(ctx, f"{target.mention} was not verified!"))
         await self.bot.data.set(target.id, "uuid", None)
         await self._unverify(target)
-        await self.logs.send(embed=discord.Embed(
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
             title="Member Unverified",
             color=discord.Color.red(),
             timestamp=ctx.message.created_at,
@@ -294,7 +290,7 @@ class Bedwars(commands.Cog):
         data = await self.bot.data.get(target.id)
         action = not data.blacklisted
         await self.bot.data.set(target.id, "blacklisted", action)
-        await self.logs.send(embed=discord.Embed(
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
             title="Member Blacklisted" if action else "Member Unblacklisted",
             color=discord.Color.red() if action else discord.Color.green(),
             timestamp=ctx.message.created_at,
@@ -315,15 +311,16 @@ class Bedwars(commands.Cog):
             guild = None
         index = player.bedwars.prestige.star_index
         index = 30 if player.bedwars.prestige.star_index > 30 else index
+        # current highest prestige is 3000, then it's the same
         role = self.bot.prestiges.all[index]
-        if not role.role: role.get(self.guild)
+        if not role.role: role.get(self.bot.static.guild)
         star = player.bedwars.prestige.star
         if len(str(star)) == 1:
             star = f"0{star}"
         await target.edit(nick=f"[{star} {role.star}] {player.name}")
         if role.role not in target.roles:
             for old in self.bot.prestiges.all:
-                if not old.role: old.get(self.guild)
+                if not old.role: old.get(self.bot.static.guild)
                 if old.role in target.roles: await target.remove_roles(old)
         await target.add_roles(role.role)
         if guild:
@@ -334,12 +331,12 @@ class Bedwars(commands.Cog):
             await target.add_roles(staff)
         if other := self.hypixel_roles.get(player.rank.name):
             await target.add_roles(other)
-        await target.remove_roles(self.need_username_role)
-        await target.remove_roles(self.need_usernames_role)
+        await target.remove_roles(self.bot.static.roles.need_username)
+        await target.remove_roles(self.bot.static.roles.need_usernames)
 
     async def _unverify(self, target: discord.Member):
         for role in self.bot.prestiges.all:
-            if not role.role: role.get(self.guild)
+            if not role.role: role.get(self.bot.static.guild)
             if role.role in target.roles: await target.remove_roles(role.role)
         for role in self.guild_roles.values():
             if role in target.roles: await target.remove_roles(role)
@@ -347,19 +344,19 @@ class Bedwars(commands.Cog):
             if role in target.roles: await target.remove_roles(role)
         for role in self.hypixel_roles.values():
             if role in target.roles: await target.remove_roles(role)
-        await target.add_roles(self.need_username_role)
+        await target.add_roles(self.bot.static.roles.need_username)
         await target.edit(nick=None)
 
-    @commands.command()
+    @commands.command(aliases=["vcs"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
     @commands.check(guild_check)
     @commands.has_role(ROLES.get("STAFF"))
-    async def vcs(self, ctx: commands.Context, limit=100):
+    async def verificationchannelscan(self, ctx: commands.Context, limit=100):
         result = []
-        async for message in self.verification.history(limit=limit):
+        async for message in self.bot.static.channels.verification.history(limit=limit):
             words = message.content.split(" ")
             if len(words) < 2: continue
-            if words[0] == "r.bwverify" or words[0] == "r.verify":
+            if words[0] in ["r.verify", "r.bwverify", "r.v"]:
                 result.append(message)
         if not result:
             return await ctx.reply(embed=self.bot.static.embed(ctx, "No verification attemps found!"))
@@ -369,6 +366,38 @@ class Bedwars(commands.Cog):
             color=ctx.author.color,
             timestamp=ctx.message.created_at,
         ))).start(ctx)
+
+    @commands.command(aliases=["fvm"])
+    @commands.max_concurrency(1, per=commands.BucketType.user)
+    @commands.check(guild_check)
+    @commands.has_role(ROLES.get("STAFF"))
+    async def forceverifymessage(self, ctx: commands.Context, message: discord.Message):
+        words = message.content.split(" ")
+        if len(words) < 2: return await ctx.reply(embed=self.bot.static.embed(ctx, "Less than two words in message, "
+                                                                                   "skipping"))
+        if not words[0] in ["r.verify", "r.bwverify", "r.v"]: return await ctx.reply(
+            embed=self.bot.static.embed(ctx, "Not a verification attempt!"))
+        player = await self.bot.hypixel.player.get(query=words[1])
+        await self.bot.data.set(message.author.id, "uuid", player.uuid)
+        await self._verify(message.author, player)
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
+            title="Member Force Verified (From User Verify Attempt)",
+            color=discord.Color.green(),
+            timestamp=ctx.message.created_at
+        ).add_field(
+            name="Member",
+            value=f"{message.author.mention} ({message.author}) [{message.author.id}]"
+        ).add_field(
+            name="Moderator",
+            value=ctx.author.mention
+        ).add_field(
+            name="Minecraft Account",
+            value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
+        ))
+        await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {message.author.mention} as {player}"),
+                        delete_after=5)
+        await ctx.message.delete()
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == message.author.id)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -381,7 +410,7 @@ class Bedwars(commands.Cog):
         player = await self.bot.hypixel.player.get(uuid=user.uuid)
         try:
             await self._verify(message.author, player)
-            await self.logs.send(embed=discord.Embed(
+            await self.bot.static.channels.logs.send(embed=discord.Embed(
                 title="Member Updated (On Message)",
                 color=discord.Color.green(),
                 timestamp=message.created_at,
