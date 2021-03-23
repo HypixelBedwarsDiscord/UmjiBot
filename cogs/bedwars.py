@@ -10,7 +10,8 @@ ROLES = {
     "NEED_USERNAME": 480448464220585984,
     "GUILDS": {
         "5c8609a877ce849ebc770053": 822593831321075762,  # thorn v2
-        "5af718d40cf2cbe7a9eeb063": 823291974471385139  # Calm
+        "5af718d40cf2cbe7a9eeb063": 823291974471385139,  # Calm
+        "5a565b450cf29432ef9dde35": 823819771861663784  # OUT
     },
     "HYPIXEL": {
         "STAFF": 416614910299209738,
@@ -63,7 +64,8 @@ class Bedwars(commands.Cog):
         self.need_username_role = self.guild.get_role(ROLES.get("NEED_USERNAME"))
         self.guild_roles = {
             "5c8609a877ce849ebc770053": self.guild.get_role(ROLES["GUILDS"].get("5c8609a877ce849ebc770053")),
-            "5af718d40cf2cbe7a9eeb063": self.guild.get_role(ROLES["GUILDS"].get("5af718d40cf2cbe7a9eeb063"))
+            "5af718d40cf2cbe7a9eeb063": self.guild.get_role(ROLES["GUILDS"].get("5af718d40cf2cbe7a9eeb063")),
+            "5a565b450cf29432ef9dde35": self.guild.get_role(ROLES["GUILDS"].get("5a565b450cf29432ef9dde35"))
         }
         self.hypixel_roles = {
             "STAFF": {
