@@ -7,7 +7,8 @@ import hypixelaPY
 
 ROLES = {
     "STAFF": 724465434358841384,
-    "NEED_USERNAME": 480448464220585984,
+    "NEED_USERNAME": 470511160412733441,
+    "NEED_USERNAMES": 480448464220585984,
     "GUILDS": {
         "5c8609a877ce849ebc770053": 822593831321075762,  # thorn v2
         "5af718d40cf2cbe7a9eeb063": 823291974471385139,  # Calm
@@ -62,6 +63,7 @@ class Bedwars(commands.Cog):
         self.verification = self.bot.get_channel(422259585798242314)
         self.staff_role = self.guild.get_role(ROLES.get("STAFF"))
         self.need_username_role = self.guild.get_role(ROLES.get("NEED_USERNAME"))
+        self.need_usernames_role = self.guild.get_role(ROLES.get("NEED_USERNAMES"))
         self.guild_roles = {
             "5c8609a877ce849ebc770053": self.guild.get_role(ROLES["GUILDS"].get("5c8609a877ce849ebc770053")),
             "5af718d40cf2cbe7a9eeb063": self.guild.get_role(ROLES["GUILDS"].get("5af718d40cf2cbe7a9eeb063")),
@@ -333,6 +335,7 @@ class Bedwars(commands.Cog):
         if other := self.hypixel_roles.get(player.rank.name):
             await target.add_roles(other)
         await target.remove_roles(self.need_username_role)
+        await target.remove_roles(self.need_usernames_role)
 
     async def _unverify(self, target: discord.Member):
         for role in self.bot.prestiges.all:
