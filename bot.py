@@ -41,6 +41,11 @@ for extension in extensions:
         print("".join(traceback.format_exception(type(error), error, error.__traceback__)))
 
 
+async def check(ctx):
+    return ctx.bot.is_ready()
+bot.add_check(check)
+
+
 async def start():
     bot.hypixel = await hypixelaPY.Hypixel(bot.config.keys.hypixel)
     bot.data = await DataConnect(bot.config.keys.postgres)
@@ -48,6 +53,7 @@ async def start():
 
 
 async def stop():
+    await bot.data.data.release()
     await bot.logout()
 
 

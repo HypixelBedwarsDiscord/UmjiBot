@@ -22,25 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord.ext import commands
+import discord
+from discord.ext import commands, menus
+
+GUILD_ID = 384804710110199809
 
 
-class Purge(commands.Cog):
+async def guild_check(ctx):
+    return ctx.guild and ctx.guild.id == GUILD_ID
+
+
+class ListRole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=["lr"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
+    @commands.check(guild_check)
     @commands.has_role(724465434358841384)  # staff
-    async def purge(self, ctx, limit: int = 100):
-        start = await ctx.reply(embed=self.bot.static.embed(ctx, f"Starting purge for {limit} messages. This could "
-                                                                 f"take a LONG time if the messages being deleted are "
-                                                                 f"over 14 days old."))
-        await ctx.channel.purge(limit=limit + 1, check=lambda m: m.id != start.id)
-        await start.delete()
-        return await ctx.send(f"Purged {limit} messages", delete_after=5)
+    async def listrole(self, ctx: commands.Context, role: discord.Role):
+        result = [member.mention for member in role.members]
+        await menus.MenuPages(source=self.bot.static.paginators.regular(result, ctx, discord.Embed(
+            title=f"{role} Role",
+            color=ctx.author.color,
+            timestamp=ctx.message.created_at,
+        ))).start(ctx)
 
 
 def setup(bot):
-    bot.add_cog(Purge(bot))
-    print("Reloaded commands.purge")
+    bot.add_cog(ListRole(bot))
+    print("Reloaded commands.listrole")

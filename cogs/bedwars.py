@@ -54,9 +54,6 @@ class Bedwars(commands.Cog):
         self.bot.loop.create_task(self._initialize())
         self.auto = {}
 
-    async def cog_check(self, ctx):
-        return self.bot.is_ready
-
     async def _initialize(self):
         await self.bot.wait_until_ready()
         self.guild = self.bot.get_guild(384804710110199809)
@@ -96,7 +93,8 @@ class Bedwars(commands.Cog):
                     name="Moderator",
                     value=ctx.me.mention
                 ))
-                return await ctx.reply(embed=self.bot.static.embed(ctx, "You are already verified!"))
+                return await ctx.reply(embed=self.bot.static.embed(ctx, "You are already verified! Type `r.u` to "
+                                                                        "update!"))
             elif user.blacklisted:
                 await self.logs.send(embed=discord.Embed(
                     title="Verification Failed",
@@ -369,7 +367,7 @@ class Bedwars(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not self.bot.is_ready or not message.guild or message.guild.id != GUILD_ID: return
+        if not self.bot.is_ready() or not message.guild or message.guild.id != GUILD_ID: return
         if last := self.auto.get(message.author.id):
             if time.time() - last < TIME_BETWEEN_AUTO:
                 return
