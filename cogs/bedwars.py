@@ -53,25 +53,7 @@ async def commands_channel_check(ctx):
 class Bedwars(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.loop.create_task(self._initialize())
         self.auto = {}
-
-    async def _initialize(self):
-        await self.bot.wait_until_ready()
-        self.guild = self.bot.get_guild(384804710110199809)
-        self.guild_roles = {
-            "5c8609a877ce849ebc770053": self.guild.get_role(ROLES["GUILDS"].get("5c8609a877ce849ebc770053")),
-            "5af718d40cf2cbe7a9eeb063": self.guild.get_role(ROLES["GUILDS"].get("5af718d40cf2cbe7a9eeb063")),
-            "5a565b450cf29432ef9dde35": self.guild.get_role(ROLES["GUILDS"].get("5a565b450cf29432ef9dde35"))
-        }
-        self.hypixel_roles = {
-            "STAFF": {
-                "STAFF": self.guild.get_role(ROLES["HYPIXEL"].get("STAFF")),
-                "MOD": self.guild.get_role(ROLES["HYPIXEL"].get("MOD")),
-                "ADMIN": self.guild.get_role(ROLES["HYPIXEL"].get("ADMIN"))
-            },
-            "YOUTUBE": self.guild.get_role(ROLES["HYPIXEL"].get("YOUTUBE"))
-        }
 
     @commands.command(aliases=["v", "bwverify"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -301,8 +283,10 @@ class Bedwars(commands.Cog):
             name="Moderator",
             value=ctx.author.mention
         ))
-        return await ctx.reply(embed=self.bot.static.embed(ctx,
-                                                           f"Blacklisted {target.mention}" if action else f"Unblacklisted {target.mention}"))
+        return await ctx.reply(
+            embed=self.bot.static.embed(ctx,
+                                        f"Blacklisted {target.mention}" if action else f"Unblacklisted {target.mention}"
+                                        ))
 
     async def _verify(self, target: discord.Member, player):
         try:
@@ -324,13 +308,12 @@ class Bedwars(commands.Cog):
                 if old.role in target.roles: await target.remove_roles(old)
         await target.add_roles(role.role)
         if guild:
-            if guild_role := self.guild_roles.get(guild.id):
+            if guild_role := self.bot.static.roles.guilds.dict.get(guild.id):
                 await target.add_roles(guild_role)
-        if staff := self.hypixel_roles["STAFF"].get(player.rank.name):
-            await target.add_roles(self.hypixel_roles["STAFF"].get("STAFF"))
-            await target.add_roles(staff)
-        if other := self.hypixel_roles.get(player.rank.name):
-            await target.add_roles(other)
+        if hypixel_role := self.bot.static.roles.hypixel.dict.get(player.rank.name):
+            if player.rank.name in ["MOD", "ADMIN"]:
+                await target.add_roles(self.bot.static.roles.hypixel.staff)
+            await target.add_roles(hypixel_role)
         await target.remove_roles(self.bot.static.roles.need_username)
         await target.remove_roles(self.bot.static.roles.need_usernames)
 
@@ -338,12 +321,10 @@ class Bedwars(commands.Cog):
         for role in self.bot.prestiges.all:
             if not role.role: role.get(self.bot.static.guild)
             if role.role in target.roles: await target.remove_roles(role.role)
-        for role in self.guild_roles.values():
-            if role in target.roles: await target.remove_roles(role)
-        for role in self.hypixel_roles["STAFF"].values():
-            if role in target.roles: await target.remove_roles(role)
-        for role in self.hypixel_roles.values():
-            if role in target.roles: await target.remove_roles(role)
+        for guild_role in self.bot.static.roles.guilds.dict.values():
+            if guild_role in target.roles: await target.remove_roles(guild_role)
+        for hypixel_role in self.bot.static.roles.hypixel.dict.values():
+            if hypixel_role in target.roles: await target.remove_roles(hypixel_role)
         await target.add_roles(self.bot.static.roles.need_username)
         await target.edit(nick=None)
 

@@ -1,4 +1,4 @@
-from discord.ext import commands, menus
+from discord.ext import menus
 import discord
 
 
@@ -27,29 +27,55 @@ class Static:
 
 class Roles:
     def __init__(self):
-        self.dict = {
-            "STAFF": 724465434358841384,
-            "NEED_USERNAME": 470511160412733441,
-            "NEED_USERNAMES": 480448464220585984,
-            "GUILDS": {
-                "5c8609a877ce849ebc770053": 822593831321075762,  # thorn v2
-                "5af718d40cf2cbe7a9eeb063": 823291974471385139  # Calm
-            },
-            "HYPIXEL": {
-                "STAFF": 416614910299209738,
-                "ADMIN": 423307128091181059,
-                "MOD": 423307060457897985,
-                "YOUTUBE": 430157044041908234
-            }
-        }
         self.staff = 724465434358841384
         self.need_username = 470511160412733441
         self.need_usernames = 480448464220585984
+        self.hypixel = HypixelRoles()
+        self.guilds = GuildRoles()
 
     def get(self, guild):
         self.staff = guild.get_role(self.staff)
         self.need_username = guild.get_role(self.need_username)
         self.need_usernames = guild.get_role(self.need_usernames)
+        self.hypixel.get(guild)
+        self.guilds.get(guild)
+
+
+class HypixelRoles:
+    def __init__(self):
+        self.staff = 416614910299209738
+        self.admin = 423307128091181059
+        self.mod = 423307060457897985
+        self.youtube = 430157044041908234
+        self.dict = {
+            "STAFF": self.staff,
+            "ADMIN": self.admin,
+            "MOD": self.mod,
+            "YOUTUBE": self.youtube
+        }
+
+    def get(self, guild):
+        self.staff = guild.get_role(self.staff)
+        self.admin = guild.get_role(self.admin)
+        self.mod = guild.get_role(self.mod)
+        self.youtube = guild.get_role(self.youtube)
+
+
+class GuildRoles:
+    def __init__(self):
+        self.thorn_v2 = 822593831321075762
+        self.calm = 823291974471385139
+        self.out = 823819771861663784
+        self.dict = {
+            "5c8609a877ce849ebc770053": self.thorn_v2,
+            "5af718d40cf2cbe7a9eeb063": self.calm,
+            "5a565b450cf29432ef9dde35": self.out
+        }
+
+    def get(self, guild):
+        self.thorn_v2 = guild.get_role(self.thorn_v2)
+        self.calm = guild.get_role(self.calm)
+        self.out = guild.get_role(self.calm)
 
 
 class Channels:
