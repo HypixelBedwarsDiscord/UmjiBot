@@ -47,6 +47,13 @@ class HypixelRoles:
         self.admin = 423307128091181059
         self.mod = 423307060457897985
         self.youtube = 430157044041908234
+        self.dict = None
+
+    def get(self, guild):
+        self.staff = guild.get_role(self.staff)
+        self.admin = guild.get_role(self.admin)
+        self.mod = guild.get_role(self.mod)
+        self.youtube = guild.get_role(self.youtube)
         self.dict = {
             "STAFF": self.staff,
             "ADMIN": self.admin,
@@ -54,28 +61,23 @@ class HypixelRoles:
             "YOUTUBE": self.youtube
         }
 
-    def get(self, guild):
-        self.staff = guild.get_role(self.staff)
-        self.admin = guild.get_role(self.admin)
-        self.mod = guild.get_role(self.mod)
-        self.youtube = guild.get_role(self.youtube)
-
 
 class GuildRoles:
     def __init__(self):
         self.thorn_v2 = 822593831321075762
         self.calm = 823291974471385139
         self.out = 823819771861663784
-        self.dict = {
-            "5c8609a877ce849ebc770053": self.thorn_v2,
-            "5af718d40cf2cbe7a9eeb063": self.calm,
-            "5a565b450cf29432ef9dde35": self.out
-        }
+        self.dict = None
 
     def get(self, guild):
         self.thorn_v2 = guild.get_role(self.thorn_v2)
         self.calm = guild.get_role(self.calm)
         self.out = guild.get_role(self.calm)
+        self.dict = {
+            "5c8609a877ce849ebc770053": self.thorn_v2,
+            "5af718d40cf2cbe7a9eeb063": self.calm,
+            "5a565b450cf29432ef9dde35": self.out
+        }
 
 
 class Channels:

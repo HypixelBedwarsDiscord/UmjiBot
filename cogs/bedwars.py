@@ -337,7 +337,7 @@ class Bedwars(commands.Cog):
         async for message in self.bot.static.channels.verification.history(limit=limit):
             words = message.content.split(" ")
             if len(words) < 2: continue
-            if words[0] in ["r.verify", "r.bwverify", "r.v"]:
+            if words[0].lower() in ["r.verify", "r.bwverify", "r.v"] and words[1].lower() not in ["ign", "litelt"]:
                 result.append(message)
         if not result:
             return await ctx.reply(embed=self.bot.static.embed(ctx, "No verification attemps found!"))
@@ -356,8 +356,9 @@ class Bedwars(commands.Cog):
         words = message.content.split(" ")
         if len(words) < 2: return await ctx.reply(embed=self.bot.static.embed(ctx, "Less than two words in message, "
                                                                                    "skipping"))
-        if not words[0] in ["r.verify", "r.bwverify", "r.v"]: return await ctx.reply(
-            embed=self.bot.static.embed(ctx, "Not a verification attempt!"))
+        if not words[0].lower() in ["r.verify", "r.bwverify", "r.v"]:
+            return await ctx.reply(
+                embed=self.bot.static.embed(ctx, "Not a verification attempt!"))
         player = await self.bot.hypixel.player.get(query=words[1])
         await self.bot.data.set(message.author.id, "uuid", player.uuid)
         await self._verify(message.author, player)
