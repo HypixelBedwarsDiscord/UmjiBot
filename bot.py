@@ -1,6 +1,5 @@
 import asyncio
 import os
-import traceback
 
 from discord.ext import commands
 import discord
@@ -23,32 +22,17 @@ bot.prestiges = Prestiges()
 bot.static = Static()
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 
-extensions = [os.path.join(dp, f) for dp, dn, fn in os.walk("cogs") for f in fn] + \
-             [os.path.join(dp, f) for dp, dn, fn in os.walk("commands") for f in fn] + \
-             [os.path.join(dp, f) for dp, dn, fn in os.walk("events") for f in fn] + \
-             ["jishaku", "initialize"]
-for file in extensions[:]:
-    if not file.endswith(".py") and file not in ["jishaku", "initialize"]:  # these are special cases
-        extensions.remove(file)
 
-for extension in extensions:
-    try:
-        bot.load_extension(((extension.replace("/", "."))[:-3]) if extension.endswith(".py") else extension)
-    except Exception as error:
-        exception = f"{type(error).__name__}: {error}"
-        print("Failed to load extension {}\n{}".format(extension, exception))
-        print(f"Failed to load extensions {extension}\n{exception}")
-        print("".join(traceback.format_exception(type(error), error, error.__traceback__)))
-
-
-async def check(ctx):
+@bot.check
+async def ready(ctx):
     return ctx.bot.is_ready()
-bot.add_check(check)
 
 
 async def start():
     bot.hypixel = await hypixelaPY.Hypixel(bot.config.keys.hypixel)
     bot.data = await DataConnect(bot.config.keys.postgres)
+    bot.load_extension("initialize")
+    bot.load_extension("jishaku")
     await bot.start(bot.config.keys.token)
 
 

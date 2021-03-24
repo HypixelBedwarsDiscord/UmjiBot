@@ -84,10 +84,12 @@ class Channels:
     def __init__(self):
         self.verification = 422259585798242314
         self.logs = 672475663994716178
+        self.commands = 398619687291715604
 
     def get(self, guild):
         self.verification = guild.get_channel(self.verification)
         self.logs = guild.get_channel(self.logs)
+        self.commands = guild.get_channel(self.commands)
 
 
 class Paginators:

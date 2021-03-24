@@ -5,6 +5,7 @@ import discord
 
 import hypixelaPY
 
+GUILD_ID = 384804710110199809
 ROLES = {
     "STAFF": 724465434358841384,
     "NEED_USERNAME": 470511160412733441,
@@ -21,7 +22,6 @@ ROLES = {
         "YOUTUBE": 430157044041908234
     }
 }
-GUILD_ID = 384804710110199809
 VERIFICATION_CHANNEL_ID = 422259585798242314
 COMMANDS_CHANNEL_ID = 398619687291715604
 # VERIFICATION_CHANNEL_ID = 0
@@ -32,22 +32,23 @@ async def guild_check(ctx):
     return ctx.guild and ctx.guild.id == GUILD_ID
 
 
+async def commands_channel_check(ctx):
+    return ctx.channel.id == COMMANDS_CHANNEL_ID
+
+
 async def verification_channel_check(ctx):
     return ctx.channel.id == VERIFICATION_CHANNEL_ID
 
 
-async def verification_check(ctx):  # this is likely temporary, there were a thousand or so people who need to reverify
+async def verification_check(ctx):
+    # this is likely temporary, there were a thousand or so people who need to reverify
     # despite already being out of the verification channel
-    if ctx.channel.id == VERIFICATION_CHANNEL_ID: return True
-    if not ctx.channel.id == COMMANDS_CHANNEL_ID: return False
+    if ctx.channel.id == VERIFICATION_CHANNEL_ID: return True  # always should work in #verification
+    if ctx.channel.id != COMMANDS_CHANNEL_ID: return False
     user = await ctx.bot.data.get(ctx.author.id)
     if not user or not bool(user.uuid):
         return True
-    return ctx.channel.id == COMMANDS_CHANNEL_ID
-
-
-async def commands_channel_check(ctx):
-    return ctx.channel.id == COMMANDS_CHANNEL_ID
+    return bool(user) or bool(user)
 
 
 class Bedwars(commands.Cog):
@@ -335,13 +336,17 @@ class Bedwars(commands.Cog):
     async def verificationchannelscan(self, ctx: commands.Context, limit=100):
         result = []
         async for message in self.bot.static.channels.verification.history(limit=limit):
+            if message.author not in ctx.guild.members: continue
             words = message.content.split(" ")
             if len(words) < 2: continue
+            data = await self.bot.data.get(message.author.id)
+            if data and bool(data.uuid): continue
             if words[0].lower() in ["r.verify", "r.bwverify", "r.v"] and words[1].lower() not in ["ign", "litelt"]:
                 result.append(message)
         if not result:
             return await ctx.reply(embed=self.bot.static.embed(ctx, "No verification attemps found!"))
-        result = [f"{message.author.mention}: {message.content}" for message in result]
+        result = [f"{message.author.mention} ({message.author.nick}): `{message.content}` ({message.id})" for message in result]
+        print("\n".join(result))
         await menus.MenuPages(source=self.bot.static.paginators.regular(result, ctx, discord.Embed(
             title="Verification Attemps",
             color=ctx.author.color,
@@ -383,7 +388,7 @@ class Bedwars(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not self.bot.is_ready() or not message.guild or message.guild.id != GUILD_ID: return
+        if not self.bot.is_ready() or not message.guild or message.guild != self.bot.static.guild: return
         if last := self.auto.get(message.author.id):
             if time.time() - last < TIME_BETWEEN_AUTO:
                 return
