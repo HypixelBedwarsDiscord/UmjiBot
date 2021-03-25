@@ -1,13 +1,41 @@
 from discord.ext import menus
 import discord
 
+STAFF_ROLE_ID = 724465434358841384
+GUILD_ID = 384804710110199809
+VERIFICATION_CHANNEL_ID = 422259585798242314
+COMMANDS_CHANNEL_ID = 398619687291715604
+
+
+async def guild_check(ctx):
+    return ctx.guild and ctx.guild.id == GUILD_ID
+
+
+async def commands_channel_check(ctx):
+    return ctx.channel.id == COMMANDS_CHANNEL_ID
+
+
+async def verification_channel_check(ctx):
+    return ctx.channel.id == VERIFICATION_CHANNEL_ID
+
+
+async def verification_check(ctx):
+    # this is likely temporary, there were a thousand or so people who need to reverify
+    # despite already being out of the verification channel
+    if ctx.channel.id == VERIFICATION_CHANNEL_ID: return True  # always should work in #verification
+    if ctx.channel.id != COMMANDS_CHANNEL_ID: return False
+    user = await ctx.bot.data.get(ctx.author.id)
+    if not user or not bool(user.uuid):
+        return True
+    return bool(user) or bool(user)
+
 
 class Static:
     def __init__(self):
         self.paginators = Paginators()
         self.roles = Roles()
         self.channels = Channels()
-        self.guild = 384804710110199809
+        self.guild = GUILD_ID
 
     def get(self, bot):
         self.guild = bot.get_guild(self.guild)
@@ -82,9 +110,9 @@ class GuildRoles:
 
 class Channels:
     def __init__(self):
-        self.verification = 422259585798242314
+        self.verification = VERIFICATION_CHANNEL_ID
         self.logs = 672475663994716178
-        self.commands = 398619687291715604
+        self.commands = COMMANDS_CHANNEL_ID
 
     def get(self, guild):
         self.verification = guild.get_channel(self.verification)

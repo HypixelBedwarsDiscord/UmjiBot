@@ -5,50 +5,9 @@ import discord
 
 import hypixelaPY
 
-GUILD_ID = 384804710110199809
-ROLES = {
-    "STAFF": 724465434358841384,
-    "NEED_USERNAME": 470511160412733441,
-    "NEED_USERNAMES": 480448464220585984,
-    "GUILDS": {
-        "5c8609a877ce849ebc770053": 822593831321075762,  # thorn v2
-        "5af718d40cf2cbe7a9eeb063": 823291974471385139,  # Calm
-        "5a565b450cf29432ef9dde35": 823819771861663784  # OUT
-    },
-    "HYPIXEL": {
-        "STAFF": 416614910299209738,
-        "ADMIN": 423307128091181059,
-        "MOD": 423307060457897985,
-        "YOUTUBE": 430157044041908234
-    }
-}
-VERIFICATION_CHANNEL_ID = 422259585798242314
-COMMANDS_CHANNEL_ID = 398619687291715604
-# VERIFICATION_CHANNEL_ID = 0
+import static
+
 TIME_BETWEEN_AUTO = 86400  # 24 hours in seconds
-
-
-async def guild_check(ctx):
-    return ctx.guild and ctx.guild.id == GUILD_ID
-
-
-async def commands_channel_check(ctx):
-    return ctx.channel.id == COMMANDS_CHANNEL_ID
-
-
-async def verification_channel_check(ctx):
-    return ctx.channel.id == VERIFICATION_CHANNEL_ID
-
-
-async def verification_check(ctx):
-    # this is likely temporary, there were a thousand or so people who need to reverify
-    # despite already being out of the verification channel
-    if ctx.channel.id == VERIFICATION_CHANNEL_ID: return True  # always should work in #verification
-    if ctx.channel.id != COMMANDS_CHANNEL_ID: return False
-    user = await ctx.bot.data.get(ctx.author.id)
-    if not user or not bool(user.uuid):
-        return True
-    return bool(user) or bool(user)
 
 
 class Bedwars(commands.Cog):
@@ -58,8 +17,8 @@ class Bedwars(commands.Cog):
 
     @commands.command(aliases=["v", "bwverify"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.check(verification_check)
+    @commands.check(static.guild_check)
+    @commands.check(static.verification_check)
     async def verify(self, ctx: commands.Context, query: str):
         if user := await self.bot.data.get(ctx.author.id):
             if bool(user.uuid):
@@ -160,13 +119,12 @@ class Bedwars(commands.Cog):
             name="Minecraft Account",
             value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
-        await ctx.message.delete()
-        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == ctx.author.id)
+        return await ctx.message.delete()
 
     @commands.command(aliases=["bwupdate", "u"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.check(commands_channel_check)
+    @commands.check(static.guild_check)
+    @commands.check(static.commands_channel_check)
     async def update(self, ctx: commands.Context):
         user = await self.bot.data.get(ctx.author.id)
         if not user or not bool(user.uuid):
@@ -192,8 +150,8 @@ class Bedwars(commands.Cog):
 
     @commands.command(aliases=["fu"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.has_role(ROLES.get("STAFF"))
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
     async def forceupdate(self, ctx: commands.Context, target: discord.Member):
         user = await self.bot.data.get(target.id)
         if not user or not bool(user.uuid):
@@ -218,8 +176,8 @@ class Bedwars(commands.Cog):
 
     @commands.command(aliases=["fv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.has_role(ROLES.get("STAFF"))
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
     async def forceverify(self, ctx: commands.Context, target: discord.Member, query: str):
         player = await self.bot.hypixel.player.get(query=query)
         await self.bot.data.set(target.id, "uuid", player.uuid)
@@ -239,13 +197,12 @@ class Bedwars(commands.Cog):
             value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
-        await ctx.message.delete()
-        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
+        return await ctx.message.delete()
 
     @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.has_role(ROLES.get("STAFF"))
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
     async def unverify(self, ctx: commands.Context, target: discord.Member):
         data = await self.bot.data.get(target.id)
         if not data or not bool(data.uuid): return await ctx.reply(
@@ -267,8 +224,8 @@ class Bedwars(commands.Cog):
 
     @commands.command()
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.has_role(ROLES.get("STAFF"))
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
     async def blacklist(self, ctx: commands.Context, target: discord.Member):
         data = await self.bot.data.get(target.id)
         action = not data.blacklisted
@@ -317,6 +274,7 @@ class Bedwars(commands.Cog):
             await target.add_roles(hypixel_role)
         await target.remove_roles(self.bot.static.roles.need_username)
         await target.remove_roles(self.bot.static.roles.need_usernames)
+        await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
 
     async def _unverify(self, target: discord.Member):
         for role in self.bot.prestiges.all:
@@ -331,8 +289,8 @@ class Bedwars(commands.Cog):
 
     @commands.command(aliases=["vcs"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.has_role(ROLES.get("STAFF"))
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
     async def verificationchannelscan(self, ctx: commands.Context, limit=100):
         result = []
         async for message in self.bot.static.channels.verification.history(limit=limit):
@@ -355,8 +313,8 @@ class Bedwars(commands.Cog):
 
     @commands.command(aliases=["fvm"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @commands.check(guild_check)
-    @commands.has_role(ROLES.get("STAFF"))
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
     async def forceverifymessage(self, ctx: commands.Context, message: discord.Message):
         words = message.content.split(" ")
         if len(words) < 2: return await ctx.reply(embed=self.bot.static.embed(ctx, "Less than two words in message, "
