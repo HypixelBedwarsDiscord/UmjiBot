@@ -124,7 +124,7 @@ class Bedwars(commands.Cog):
     @commands.command(aliases=["bwupdate", "u"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
     @commands.check(static.guild_check)
-    @commands.check(static.commands_channel_check)
+    @commands.check(static.update_check)
     async def update(self, ctx: commands.Context):
         user = await self.bot.data.get(ctx.author.id)
         if not user or not bool(user.uuid):

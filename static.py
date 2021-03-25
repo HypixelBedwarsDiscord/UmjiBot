@@ -19,6 +19,10 @@ async def verification_channel_check(ctx):
     return ctx.channel.id == VERIFICATION_CHANNEL_ID
 
 
+async def update_check(ctx):
+    return ctx.channel.id == COMMANDS_CHANNEL_ID or ctx.channel.id == VERIFICATION_CHANNEL_ID
+
+
 async def verification_check(ctx):
     # this is likely temporary, there were a thousand or so people who need to reverify
     # despite already being out of the verification channel
