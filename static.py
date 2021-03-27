@@ -99,16 +99,19 @@ class GuildRoles:
         self.thorn_v2 = 822593831321075762
         self.calm = 823291974471385139
         self.out = 823819771861663784
+        self.enigmata = 825482080313147442
         self.dict = None
 
     def get(self, guild):
         self.thorn_v2 = guild.get_role(self.thorn_v2)
         self.calm = guild.get_role(self.calm)
         self.out = guild.get_role(self.calm)
+        self.enigmata = guild.get_role(self.enigmata)
         self.dict = {
             "5c8609a877ce849ebc770053": self.thorn_v2,
             "5af718d40cf2cbe7a9eeb063": self.calm,
-            "5a565b450cf29432ef9dde35": self.out
+            "5a565b450cf29432ef9dde35": self.out,
+            "5988f8340cf2851f860c9a7b": self.enigmata,
         }
 
 
