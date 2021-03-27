@@ -152,27 +152,29 @@ class Bedwars(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.user)
     @commands.check(static.guild_check)
     @commands.has_role(static.STAFF_ROLE_ID)
-    async def forceupdate(self, ctx: commands.Context, target: discord.Member):
-        user = await self.bot.data.get(target.id)
-        if not user or not bool(user.uuid):
-            return await ctx.reply(embed=self.bot.static.embed(ctx, f"{target.mention} is not verified!"))
-        player = await self.bot.hypixel.player.get(uuid=user.uuid)
-        await self._verify(target, player)
-        await self.bot.static.channels.logs.send(embed=discord.Embed(
-            title="Member Force Updated",
-            color=discord.Color.green(),
-            timestamp=ctx.message.created_at,
-        ).add_field(
-            name="Member",
-            value=f"{target.mention} ({target}) [{target.id}]"
-        ).add_field(
-            name="Moderator",
-            value=ctx.author.mention
-        ).add_field(
-            name="Minecraft Account",
-            value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
-        ))
-        return await ctx.reply(embed=self.bot.static.embed(ctx, f"Updated {target.mention}'s roles and nickname!"))
+    async def forceupdate(self, ctx: commands.Context, *targets: discord.Member):
+        for target in targets:
+            user = await self.bot.data.get(target.id)
+            if not user or not bool(user.uuid):
+                return await ctx.reply(embed=self.bot.static.embed(ctx, f"{target.mention} is not verified!"))
+            player = await self.bot.hypixel.player.get(uuid=user.uuid)
+            await self._verify(target, player)
+            await self.bot.static.channels.logs.send(embed=discord.Embed(
+                title="Member Force Updated",
+                color=discord.Color.green(),
+                timestamp=ctx.message.created_at,
+            ).add_field(
+                name="Member",
+                value=f"{target.mention} ({target}) [{target.id}]"
+            ).add_field(
+                name="Moderator",
+                value=ctx.author.mention
+            ).add_field(
+                name="Minecraft Account",
+                value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
+            ))
+            await ctx.reply(embed=self.bot.static.embed(ctx, f"Updated {target.mention}'s roles and nickname!"),
+                            delete_after=5)
 
     @commands.command(aliases=["fv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
