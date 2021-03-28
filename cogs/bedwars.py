@@ -119,7 +119,8 @@ class Bedwars(commands.Cog):
             name="Minecraft Account",
             value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
-        return await ctx.message.delete()
+        await ctx.message.delete()
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == ctx.author.id)
 
     @commands.command(aliases=["bwupdate", "u"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -146,7 +147,8 @@ class Bedwars(commands.Cog):
             name="Minecraft Account",
             value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
-        return await ctx.reply(embed=self.bot.static.embed(ctx, "Updated your roles and nickname!"))
+        await ctx.reply(embed=self.bot.static.embed(ctx, "Updated your roles and nickname!"))
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == ctx.author.id)
 
     @commands.command(aliases=["fu"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -173,8 +175,8 @@ class Bedwars(commands.Cog):
                 name="Minecraft Account",
                 value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
             ))
-            await ctx.reply(embed=self.bot.static.embed(ctx, f"Updated {target.mention}'s roles and nickname!"),
-                            delete_after=5)
+            await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
+        await ctx.reply(embed=self.bot.static.embed(ctx, f"Updated {', '.join([target.mention for target in targets])}'s roles and nickname!"))
 
     @commands.command(aliases=["fv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -199,7 +201,8 @@ class Bedwars(commands.Cog):
             value=f"[{player.name}]({self.bot.static.plancke_url(player.uuid)})"
         ))
         await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {player}"), delete_after=5)
-        return await ctx.message.delete()
+        await ctx.message.delete()
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
 
     @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
@@ -269,14 +272,21 @@ class Bedwars(commands.Cog):
         await target.add_roles(role.role)
         if guild:
             if guild_role := self.bot.static.roles.guilds.dict.get(guild.id):
-                await target.add_roles(guild_role)
+                for old_guild_role in self.bot.static.roles.guilds.dict.values():
+                    if guild_role in target.roles: await target.remove_roles(old_guild_role)
+                    await target.add_roles(guild_role)
+            else:
+                for guild_role in self.bot.static.roles.guilds.dict.values():
+                    if guild_role in target.roles: await target.remove_roles(guild_role)
         if hypixel_role := self.bot.static.roles.hypixel.dict.get(player.rank.name):
             if player.rank.name in ["MOD", "ADMIN"]:
                 await target.add_roles(self.bot.static.roles.hypixel.staff)
             await target.add_roles(hypixel_role)
+        else:
+            for guild_role in self.bot.static.roles.guilds.dict.values():
+                if guild_role in target.roles: await target.remove_roles(guild_role)
         await target.remove_roles(self.bot.static.roles.need_username)
         await target.remove_roles(self.bot.static.roles.need_usernames)
-        await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
 
     async def _unverify(self, target: discord.Member):
         for role in self.bot.prestiges.all:
