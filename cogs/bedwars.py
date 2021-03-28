@@ -271,20 +271,20 @@ class Bedwars(commands.Cog):
                 if old.role in target.roles: await target.remove_roles(old)
         await target.add_roles(role.role)
         if guild:
+            for old_guild_role in self.bot.static.roles.guilds.dict.values():
+                if old_guild_role in target.roles: await target.remove_roles(old_guild_role)
             if guild_role := self.bot.static.roles.guilds.dict.get(guild.id):
-                for old_guild_role in self.bot.static.roles.guilds.dict.values():
-                    if old_guild_role in target.roles: await target.remove_roles(old_guild_role)
-                    await target.add_roles(guild_role)
+                await target.add_roles(guild_role)
             else:
                 for guild_role in self.bot.static.roles.guilds.dict.values():
                     if guild_role in target.roles: await target.remove_roles(guild_role)
+        else:
+            for guild_role in self.bot.static.roles.guilds.dict.values():
+                if guild_role in target.roles: await target.remove_roles(guild_role)
         if hypixel_role := self.bot.static.roles.hypixel.dict.get(player.rank.name):
             if player.rank.name in ["MOD", "ADMIN"]:
                 await target.add_roles(self.bot.static.roles.hypixel.staff)
             await target.add_roles(hypixel_role)
-        else:
-            for guild_role in self.bot.static.roles.guilds.dict.values():
-                if guild_role in target.roles: await target.remove_roles(guild_role)
         await target.remove_roles(self.bot.static.roles.need_username)
         await target.remove_roles(self.bot.static.roles.need_usernames)
 
