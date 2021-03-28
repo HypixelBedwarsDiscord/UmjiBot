@@ -273,7 +273,7 @@ class Bedwars(commands.Cog):
         if guild:
             if guild_role := self.bot.static.roles.guilds.dict.get(guild.id):
                 for old_guild_role in self.bot.static.roles.guilds.dict.values():
-                    if guild_role in target.roles: await target.remove_roles(old_guild_role)
+                    if old_guild_role in target.roles: await target.remove_roles(old_guild_role)
                     await target.add_roles(guild_role)
             else:
                 for guild_role in self.bot.static.roles.guilds.dict.values():
