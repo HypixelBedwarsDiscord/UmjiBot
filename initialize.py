@@ -21,7 +21,8 @@ class Initialize(commands.Cog):
         self.bot.static.channels.get(self.bot.static.guild)
         extensions = [os.path.join(dp, f) for dp, dn, fn in os.walk("cogs") for f in fn] + \
                      [os.path.join(dp, f) for dp, dn, fn in os.walk("commands") for f in fn] + \
-                     [os.path.join(dp, f) for dp, dn, fn in os.walk("events") for f in fn]
+                     [os.path.join(dp, f) for dp, dn, fn in os.walk("events") for f in fn] + \
+                     [os.path.join(dp, f) for dp, dn, fn in os.walk("modules") for f in fn]
         for file in extensions[:]:
             if not file.endswith(".py"):  # these are special cases
                 extensions.remove(file)

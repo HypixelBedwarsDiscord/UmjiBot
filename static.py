@@ -123,11 +123,13 @@ class Channels:
         self.verification = VERIFICATION_CHANNEL_ID
         self.logs = 672475663994716178
         self.commands = COMMANDS_CHANNEL_ID
+        self.boosts = 691369961108799569
 
     def get(self, guild):
         self.verification = guild.get_channel(self.verification)
         self.logs = guild.get_channel(self.logs)
         self.commands = guild.get_channel(self.commands)
+        self.boosts = guild.get_channel(self.boosts)
 
 
 class Paginators:

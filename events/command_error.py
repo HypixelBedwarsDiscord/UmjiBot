@@ -22,7 +22,7 @@ class CommandError(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if not self.bot.is_ready: return
+        if not self.bot.is_ready(): return
         error = getattr(error, "original", error)
         ignored = (commands.CommandNotFound,
                    commands.CheckFailure
