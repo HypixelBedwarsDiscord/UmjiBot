@@ -34,6 +34,8 @@ class Bedwars(commands.Cog):
                     name="Moderator",
                     value=ctx.me.mention
                 ))
+                player = await self.bot.hypixel.player.get(query=user.uuid)
+                await self._verify(ctx.author, player)
                 return await ctx.reply(embed=self.bot.static.embed(ctx, "You are already verified! Type `r.u` to "
                                                                         "update!"))
             elif user.blacklisted:
