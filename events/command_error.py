@@ -42,10 +42,13 @@ The username you entered could not be found on Hypixel.
         elif isinstance(error, commands.MissingRequiredArgument):
             if ctx.command.name == "verify":
                 return await ctx.reply(
-                    embed=self.bot.static.embed(ctx, f"You must provide a Minecraft Username to verify with. For "
-                                                     f"example, `r.verify myerfire`"))
+                    embed=self.bot.static.embed(ctx, f"{ctx.author.mention}, You must provide a Minecraft Username to "
+                                                     f"verify with. For example, `r.verify myerfire`"))
             return await ctx.reply(
-                embed=self.bot.static.embed(ctx, f"{error.param} is a required argument that is missing"))
+                embed=self.bot.static.embed(ctx, f"{ctx.author.mention}, {error.param} is a required argument that is missing"))
+        elif isinstance(error, hypixelaPY.APIError):
+            return await ctx.reply(
+                embed=ctx.bot.static.embed(ctx, f"{ctx.author.mention}, the Hypixel API is down. Please try again later."))
         await ctx.reply(embed=self.bot.static.embed(ctx, str(error)))
         error_traceback = "".join(traceback.format_exception(type(error), error, error.__traceback__))
         await ctx.bot.config.channels.errors.send(embed=discord.Embed(
