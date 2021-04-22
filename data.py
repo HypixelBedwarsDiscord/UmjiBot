@@ -33,6 +33,7 @@ class Player:
     def __init__(self, data):
         self.uuid = data.get("uuid")
         self.blacklisted = data.get("blacklisted", False)
+        self.points = data.get("points", 0)
 
     @staticmethod
     def default():

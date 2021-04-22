@@ -104,6 +104,7 @@ class GuildRoles:
         self.kiddai = 828836394587127858
         self.hypixel_knights = 833037599647465482
         self.matrix = 833458348229787648
+        self.cronos = 834517360357933068
         self.dict = None
 
     def get(self, guild):
@@ -115,6 +116,7 @@ class GuildRoles:
         self.kiddai = guild.get_role(self.kiddai)
         self.hypixel_knights = guild.get_role(self.hypixel_knights)
         self.matrix = guild.get_role(self.matrix)
+        self.cronos = guild.get_role(self.cronos)
         self.dict = {
             "5c8609a877ce849ebc770053": self.thorn_v2,
             "5af718d40cf2cbe7a9eeb063": self.calm,
@@ -123,7 +125,8 @@ class GuildRoles:
             "5b9865700cf24be3ce6e284e": self.envision,
             "5c718ca977ce843771fdcef5": self.kiddai,
             "5525c1b80cf27cb4963a85c8": self.hypixel_knights,
-            "5363aa4eed50df539dca00ad": self.matrix
+            "5363aa4eed50df539dca00ad": self.matrix,
+            "56ece7c40cf2e4f9ffcc284e": self.cronos
         }
 
 
