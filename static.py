@@ -62,6 +62,7 @@ class Roles:
         self.staff = 724465434358841384
         self.need_username = 470511160412733441
         self.need_usernames = 480448464220585984
+        self.verified = 840265827831382076
         self.hypixel = HypixelRoles()
         self.guilds = GuildRoles()
 
@@ -69,6 +70,7 @@ class Roles:
         self.staff = guild.get_role(self.staff)
         self.need_username = guild.get_role(self.need_username)
         self.need_usernames = guild.get_role(self.need_usernames)
+        self.verified = guild.get_role(self.verified)
         self.hypixel.get(guild)
         self.guilds.get(guild)
 
@@ -106,6 +108,7 @@ class GuildRoles:
         self.matrix = 833458348229787648
         self.cronos = 834517360357933068
         self.serious = 835687439594029086
+        self.lucid = 836658359175610398
         self.dict = None
 
     def get(self, guild):
@@ -119,6 +122,7 @@ class GuildRoles:
         self.matrix = guild.get_role(self.matrix)
         self.cronos = guild.get_role(self.cronos)
         self.serious = guild.get_role(self.serious)
+        self.lucid = guild.get_role(self.lucid)
         self.dict = {
             "5c8609a877ce849ebc770053": self.thorn_v2,
             "5af718d40cf2cbe7a9eeb063": self.calm,
@@ -129,7 +133,8 @@ class GuildRoles:
             "5525c1b80cf27cb4963a85c8": self.hypixel_knights,
             "5363aa4eed50df539dca00ad": self.matrix,
             "56ece7c40cf2e4f9ffcc284e": self.cronos,
-            "5bd752088b6caf133846584f": self.serious
+            "5bd752088b6caf133846584f": self.serious,
+            "5bb8828e0cf2d46f5a5c5bbc": self.lucid
         }
 
 
