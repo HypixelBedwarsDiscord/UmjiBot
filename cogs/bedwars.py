@@ -80,7 +80,7 @@ class Bedwars(commands.Cog):
                                                  f"6. Head back to <#422259585798242314> and run "
                                                  f"`r.verify <username>` with username being your "
                                                  f"Minecraft username.\n\n"
-                                                 f"--> Example: `r.verify Poggos`\n\n"
+                                                 f"--> Example: `r.verify myerm`\n\n"
                                                  f"If you need more help, view <#614994890790666242>"))
         elif str(
                 ctx.author) != player.social.discord and f"{str(ctx.author.id)[-6:]}#{ctx.author.discriminator}" != player.social.discord:
@@ -272,6 +272,7 @@ class Bedwars(commands.Cog):
                 if not old.role: old.get(self.bot.static.guild)
                 if old.role in target.roles: await target.remove_roles(old)
         await target.add_roles(role.role)
+        await target.add_roles(self.bot.static.roles.verified)
         if guild:
             for old_guild_role in self.bot.static.roles.guilds.dict.values():
                 if old_guild_role in target.roles: await target.remove_roles(old_guild_role)
