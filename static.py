@@ -109,6 +109,7 @@ class GuildRoles:
         self.cronos = 834517360357933068
         self.serious = 835687439594029086
         self.lucid = 836658359175610398
+        self.weclick = 842445857227538492
         self.dict = None
 
     def get(self, guild):
@@ -123,6 +124,7 @@ class GuildRoles:
         self.cronos = guild.get_role(self.cronos)
         self.serious = guild.get_role(self.serious)
         self.lucid = guild.get_role(self.lucid)
+        self.weclick = guild.get_role(self.weclick)
         self.dict = {
             "5c8609a877ce849ebc770053": self.thorn_v2,
             "5af718d40cf2cbe7a9eeb063": self.calm,
@@ -134,7 +136,8 @@ class GuildRoles:
             "5363aa4eed50df539dca00ad": self.matrix,
             "56ece7c40cf2e4f9ffcc284e": self.cronos,
             "5bd752088b6caf133846584f": self.serious,
-            "5bb8828e0cf2d46f5a5c5bbc": self.lucid
+            "5bb8828e0cf2d46f5a5c5bbc": self.lucid,
+            "5a68bd260cf29432ef9df795": self.weclick,
         }
 
 
