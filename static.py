@@ -60,7 +60,6 @@ class Static:
 class Roles:
     def __init__(self):
         self.staff = 724465434358841384
-        self.need_username = 470511160412733441
         self.need_usernames = 480448464220585984
         self.verified = 840265827831382076
         self.hypixel = HypixelRoles()
@@ -68,7 +67,6 @@ class Roles:
 
     def get(self, guild):
         self.staff = guild.get_role(self.staff)
-        self.need_username = guild.get_role(self.need_username)
         self.need_usernames = guild.get_role(self.need_usernames)
         self.verified = guild.get_role(self.verified)
         self.hypixel.get(guild)
@@ -110,6 +108,10 @@ class GuildRoles:
         self.serious = 835687439594029086
         self.lucid = 836658359175610398
         self.weclick = 842445857227538492
+        self.comatose = 864960997553995797
+        self.electus = 864967945448718396
+        self.cent = 854156567846453269
+        self.district_1 = 867931532944355348
         self.dict = None
 
     def get(self, guild):
@@ -125,6 +127,10 @@ class GuildRoles:
         self.serious = guild.get_role(self.serious)
         self.lucid = guild.get_role(self.lucid)
         self.weclick = guild.get_role(self.weclick)
+        self.comatose = guild.get_role(self.comatose)
+        self.electus = guild.get_role(self.electus)
+        self.cent = guild.get_role(self.cent)
+        self.district_1 = guild.get_role(self.district_1)
         self.dict = {
             "5c8609a877ce849ebc770053": self.thorn_v2,
             "5af718d40cf2cbe7a9eeb063": self.calm,
@@ -138,6 +144,10 @@ class GuildRoles:
             "5bd752088b6caf133846584f": self.serious,
             "5bb8828e0cf2d46f5a5c5bbc": self.lucid,
             "5a68bd260cf29432ef9df795": self.weclick,
+            "5cb5fc0577ce849e4f684ec9": self.comatose,
+            "5b3adb9c0cf2acf6b87d7b5c": self.electus,
+            "6071da458ea8c9ee3f278fd8": self.cent,
+            "5d23a3df77ce8492ebe7e270": self.district_1,
         }
 
 
@@ -147,12 +157,14 @@ class Channels:
         self.logs = 672475663994716178
         self.commands = COMMANDS_CHANNEL_ID
         self.boosts = 691369961108799569
+        self.verification_list_30 = 855649436591325194
 
     def get(self, guild):
         self.verification = guild.get_channel(self.verification)
         self.logs = guild.get_channel(self.logs)
         self.commands = guild.get_channel(self.commands)
         self.boosts = guild.get_channel(self.boosts)
+        self.verification_list_30 = guild.get_channel(self.verification_list_30)
 
 
 class Paginators:

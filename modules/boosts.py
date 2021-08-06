@@ -9,7 +9,7 @@ class Boosts(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if not self.bot.is_ready(): return
-        if not message.channel == self.bot.static.channels.boosts: return
+        if not message.channel.id == self.bot.static.channels.boosts.id: return
         if not message.type == discord.MessageType.premium_guild_subscription: return
         return await message.add_reaction(":yellow_heart:")
 

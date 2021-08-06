@@ -206,6 +206,30 @@ class Bedwars(commands.Cog):
         await ctx.message.delete()
         return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
 
+    @commands.command(aliases=["fov"])
+    @commands.max_concurrency(1, per=commands.BucketType.user)
+    @commands.check(static.guild_check)
+    @commands.has_role(static.STAFF_ROLE_ID)
+    async def forceofflineverify(self, ctx: commands.Context, target: discord.Member, ign: str, star: int = 1):
+        await self._offline_verify(target, star, ign)
+        await self.bot.static.channels.logs.send(embed=discord.Embed(
+            title="Member Force **OFFLINE** Verified",
+            color=discord.Color.green(),
+            timestamp=ctx.message.created_at
+        ).add_field(
+            name="Member",
+            value=f"{target.mention} ({target}) [{target.id}]"
+        ).add_field(
+            name="Moderator",
+            value=ctx.author.mention
+        ).add_field(
+            name="Minecraft Account",
+            value=f"[{ign}]({self.bot.static.plancke_url(ign)})"
+        ))
+        await ctx.reply(embed=self.bot.static.embed(ctx, f"Verified {target.mention} as {ign}"), delete_after=5)
+        await ctx.message.delete()
+        return await self.bot.static.channels.verification.purge(check=lambda m: m.author.id == target.id)
+
     @commands.command(aliases=["forceunverify", "uv", "fuv"])
     @commands.max_concurrency(1, per=commands.BucketType.user)
     @commands.check(static.guild_check)
@@ -288,8 +312,25 @@ class Bedwars(commands.Cog):
             if player.rank.name in ["MOD", "ADMIN"]:
                 await target.add_roles(self.bot.static.roles.hypixel.staff)
             await target.add_roles(hypixel_role)
-        await target.remove_roles(self.bot.static.roles.need_username)
         await target.remove_roles(self.bot.static.roles.need_usernames)
+
+    async def _offline_verify(self, target: discord.Member, star, ign):
+        index = star // 100
+        index = 30 if index > 30 else index
+        role = self.bot.prestiges.all[index]
+        if not role.role: role.get(self.bot.static.guild)
+        star = star
+        if len(str(star)) == 1:
+            star = f"0{star}"
+        await target.edit(nick=f"[{star} {role.star}] {ign}")
+        if role.role not in target.roles:
+            for old in self.bot.prestiges.all:
+                if not old.role: old.get(self.bot.static.guild)
+                if old.role in target.roles: await target.remove_roles(old)
+        await target.add_roles(role.role)
+        await target.add_roles(self.bot.static.roles.verified)
+        await target.remove_roles(self.bot.static.roles.need_usernames)
+        await self.bot.static.channels.verification_list_30.send(target.mention)
 
     async def _unverify(self, target: discord.Member):
         for role in self.bot.prestiges.all:
@@ -299,7 +340,7 @@ class Bedwars(commands.Cog):
             if guild_role in target.roles: await target.remove_roles(guild_role)
         for hypixel_role in self.bot.static.roles.hypixel.dict.values():
             if hypixel_role in target.roles: await target.remove_roles(hypixel_role)
-        await target.add_roles(self.bot.static.roles.need_username)
+        await target.add_roles(self.bot.static.roles.need_usernames)
         await target.edit(nick=None)
 
     @commands.command(aliases=["vcs"])

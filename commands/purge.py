@@ -32,7 +32,7 @@ class Purge(commands.Cog):
     @commands.command()
     @commands.max_concurrency(1, per=commands.BucketType.user)
     @commands.has_role(724465434358841384)  # staff
-    async def purge(self, ctx, limit: int = 100):
+    async def purge(self, ctx, limit: int):
         start = await ctx.reply(embed=self.bot.static.embed(ctx, f"Starting purge for {limit} messages. This could "
                                                                  f"take a LONG time if the messages being deleted are "
                                                                  f"over 14 days old."))
