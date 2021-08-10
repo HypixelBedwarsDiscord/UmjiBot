@@ -351,6 +351,7 @@ class Bedwars(commands.Cog):
         result = []
         async for message in self.bot.static.channels.verification.history(limit=limit):
             if message.author not in ctx.guild.members: continue
+            if isinstance(message.author, discord.User): continue
             words = message.content.split(" ")
             if len(words) < 2: continue
             data = await self.bot.data.get(message.author.id)

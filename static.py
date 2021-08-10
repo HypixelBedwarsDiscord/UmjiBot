@@ -60,6 +60,7 @@ class Static:
 class Roles:
     def __init__(self):
         self.staff = 724465434358841384
+        self.support = 459841215945375757
         self.need_usernames = 480448464220585984
         self.verified = 840265827831382076
         self.hypixel = HypixelRoles()
@@ -67,6 +68,7 @@ class Roles:
 
     def get(self, guild):
         self.staff = guild.get_role(self.staff)
+        self.support = guild.get_role(self.support)
         self.need_usernames = guild.get_role(self.need_usernames)
         self.verified = guild.get_role(self.verified)
         self.hypixel.get(guild)
@@ -112,6 +114,7 @@ class GuildRoles:
         self.electus = 864967945448718396
         self.cent = 854156567846453269
         self.district_1 = 867931532944355348
+        self.miscellaneous = 873667357799768115
         self.dict = None
 
     def get(self, guild):
@@ -131,6 +134,7 @@ class GuildRoles:
         self.electus = guild.get_role(self.electus)
         self.cent = guild.get_role(self.cent)
         self.district_1 = guild.get_role(self.district_1)
+        self.miscellaneous = guild.get_role(self.miscellaneous)
         self.dict = {
             "5c8609a877ce849ebc770053": self.thorn_v2,
             "5af718d40cf2cbe7a9eeb063": self.calm,
@@ -148,6 +152,7 @@ class GuildRoles:
             "5b3adb9c0cf2acf6b87d7b5c": self.electus,
             "6071da458ea8c9ee3f278fd8": self.cent,
             "5d23a3df77ce8492ebe7e270": self.district_1,
+            "53bd1b3aed503e868873e8f1": self.miscellaneous
         }
 
 
@@ -158,6 +163,7 @@ class Channels:
         self.commands = COMMANDS_CHANNEL_ID
         self.boosts = 691369961108799569
         self.verification_list_30 = 855649436591325194
+        self.categories = Categories()
 
     def get(self, guild):
         self.verification = guild.get_channel(self.verification)
@@ -165,6 +171,15 @@ class Channels:
         self.commands = guild.get_channel(self.commands)
         self.boosts = guild.get_channel(self.boosts)
         self.verification_list_30 = guild.get_channel(self.verification_list_30)
+        self.categories.get(guild)
+
+
+class Categories:
+    def __init__(self):
+        self.tickets = 459835600913039360
+
+    def get(self, guild):
+        self.tickets = guild.get_channel(self.tickets)
 
 
 class Paginators:
