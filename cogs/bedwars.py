@@ -278,10 +278,6 @@ class Bedwars(commands.Cog):
                                         ))
 
     async def _verify(self, target: discord.Member, player):
-        try:
-            guild = await self.bot.hypixel.guild.get(uuid=player.uuid)
-        except hypixelaPY.NoGuildFoundError:
-            guild = None
         index = player.bedwars.prestige.star_index
         index = 30 if player.bedwars.prestige.star_index > 30 else index
         # current highest prestige is 3000, then it's the same
@@ -297,17 +293,6 @@ class Bedwars(commands.Cog):
                 if old.role in target.roles: await target.remove_roles(old)
         await target.add_roles(role.role)
         await target.add_roles(self.bot.static.roles.verified)
-        if guild:
-            for old_guild_role in self.bot.static.roles.guilds.dict.values():
-                if old_guild_role in target.roles: await target.remove_roles(old_guild_role)
-            if guild_role := self.bot.static.roles.guilds.dict.get(guild.id):
-                await target.add_roles(guild_role)
-            else:
-                for guild_role in self.bot.static.roles.guilds.dict.values():
-                    if guild_role in target.roles: await target.remove_roles(guild_role)
-        else:
-            for guild_role in self.bot.static.roles.guilds.dict.values():
-                if guild_role in target.roles: await target.remove_roles(guild_role)
         if hypixel_role := self.bot.static.roles.hypixel.dict.get(player.rank.name):
             if player.rank.name in ["MOD", "ADMIN"]:
                 await target.add_roles(self.bot.static.roles.hypixel.staff)
@@ -336,8 +321,6 @@ class Bedwars(commands.Cog):
         for role in self.bot.prestiges.all:
             if not role.role: role.get(self.bot.static.guild)
             if role.role in target.roles: await target.remove_roles(role.role)
-        for guild_role in self.bot.static.roles.guilds.dict.values():
-            if guild_role in target.roles: await target.remove_roles(guild_role)
         for hypixel_role in self.bot.static.roles.hypixel.dict.values():
             if hypixel_role in target.roles: await target.remove_roles(hypixel_role)
         await target.add_roles(self.bot.static.roles.need_usernames)

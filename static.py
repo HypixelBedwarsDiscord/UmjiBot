@@ -64,7 +64,6 @@ class Roles:
         self.need_usernames = 480448464220585984
         self.verified = 840265827831382076
         self.hypixel = HypixelRoles()
-        self.guilds = GuildRoles()
 
     def get(self, guild):
         self.staff = guild.get_role(self.staff)
@@ -72,7 +71,6 @@ class Roles:
         self.need_usernames = guild.get_role(self.need_usernames)
         self.verified = guild.get_role(self.verified)
         self.hypixel.get(guild)
-        self.guilds.get(guild)
 
 
 class HypixelRoles:
@@ -93,66 +91,6 @@ class HypixelRoles:
             "ADMIN": self.admin,
             "MOD": self.mod,
             "YOUTUBE": self.youtube
-        }
-
-
-class GuildRoles:
-    def __init__(self):
-        self.thorn_v2 = 822593831321075762
-        self.calm = 823291974471385139
-        self.out = 823819771861663784
-        self.enigmata = 825477466864615435
-        self.envision = 825488592368828486
-        self.kiddai = 828836394587127858
-        self.hypixel_knights = 833037599647465482
-        self.matrix = 833458348229787648
-        self.cronos = 834517360357933068
-        self.serious = 835687439594029086
-        self.lucid = 836658359175610398
-        self.weclick = 842445857227538492
-        self.comatose = 864960997553995797
-        self.electus = 864967945448718396
-        self.cent = 854156567846453269
-        self.district_1 = 867931532944355348
-        self.miscellaneous = 873667357799768115
-        self.dict = None
-
-    def get(self, guild):
-        self.thorn_v2 = guild.get_role(self.thorn_v2)
-        self.calm = guild.get_role(self.calm)
-        self.out = guild.get_role(self.calm)
-        self.enigmata = guild.get_role(self.enigmata)
-        self.envision = guild.get_role(self.envision)
-        self.kiddai = guild.get_role(self.kiddai)
-        self.hypixel_knights = guild.get_role(self.hypixel_knights)
-        self.matrix = guild.get_role(self.matrix)
-        self.cronos = guild.get_role(self.cronos)
-        self.serious = guild.get_role(self.serious)
-        self.lucid = guild.get_role(self.lucid)
-        self.weclick = guild.get_role(self.weclick)
-        self.comatose = guild.get_role(self.comatose)
-        self.electus = guild.get_role(self.electus)
-        self.cent = guild.get_role(self.cent)
-        self.district_1 = guild.get_role(self.district_1)
-        self.miscellaneous = guild.get_role(self.miscellaneous)
-        self.dict = {
-            "5c8609a877ce849ebc770053": self.thorn_v2,
-            "5af718d40cf2cbe7a9eeb063": self.calm,
-            "5a565b450cf29432ef9dde35": self.out,
-            "5988f8340cf2851f860c9a7b": self.enigmata,
-            "5b9865700cf24be3ce6e284e": self.envision,
-            "5c718ca977ce843771fdcef5": self.kiddai,
-            "5525c1b80cf27cb4963a85c8": self.hypixel_knights,
-            "5363aa4eed50df539dca00ad": self.matrix,
-            "56ece7c40cf2e4f9ffcc284e": self.cronos,
-            "5bd752088b6caf133846584f": self.serious,
-            "5bb8828e0cf2d46f5a5c5bbc": self.lucid,
-            "5a68bd260cf29432ef9df795": self.weclick,
-            "5cb5fc0577ce849e4f684ec9": self.comatose,
-            "5b3adb9c0cf2acf6b87d7b5c": self.electus,
-            "6071da458ea8c9ee3f278fd8": self.cent,
-            "5d23a3df77ce8492ebe7e270": self.district_1,
-            "53bd1b3aed503e868873e8f1": self.miscellaneous
         }
 
 
