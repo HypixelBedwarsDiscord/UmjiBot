@@ -11,7 +11,9 @@ module.exports = {
             console.error(error);
             try {
                 await interaction.reply({ content: "This command failed!", ephemeral: true })
-            } catch (error) {}
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 }
