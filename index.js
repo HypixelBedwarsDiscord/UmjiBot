@@ -8,14 +8,19 @@ const { Pool } = require("pg");
 const intents = new Intents(32767); // all intents
 const client = new Client({ intents: intents, makeCache: Options.cacheEverything()});
 
+console.log("[STARTUP] Initializing..")
+
 client.commands = new Collection();
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
+console.log("[COMMANDS] Loading commands..")
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.data.name, command);
+    console.log(`[COMMANDS] /${command.data.name} loaded`)
 };
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+console.log("[EVENTS] Registering events..")
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
     if (!event.active) { 
@@ -23,8 +28,10 @@ for (const file of eventFiles) {
     };
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
+        console.log(`[EVENTS] One time event ${event.name} registered`);
     } else {
         client.on(event.name, (...args) => event.execute(...args));
+        console.log(`[EVENTS] Persistent event ${event.name} registered`);
     };
 };
 
@@ -40,4 +47,5 @@ const { verify, unverify } = require("./methods");
 client.verify = verify;
 client.unverify = unverify;
 
+console.log("[STARTUP] Logging into Discord..")
 client.login(keys.token);
