@@ -2,9 +2,15 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { guildID, verificationLogsChannelID, verificationChannelID } = require("../static");
 
+const discordNotLinkedOrNotMatchingEmbed = new MessageEmbed()
+    .setTitle("Discord tag on Hypixel not linked or does not match")
+    .setDescription("To set your Discord tag on Hypixel, please follow the intructions below")
+    .setColor("DARK_RED")
+    .setImage("https://static.myer.wtf/linkhypixeldiscordguide.gif")
+
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("verify")
+        .setName("bwverify")
         .setDescription("Verifies user, giving appropriate roles, setting nickname, and saving UUID to database")
         .addStringOption(option =>
             option.setName("ign")
@@ -25,9 +31,9 @@ module.exports = {
         const hypixelDiscord = player.socialMedia.find(socialMedia => socialMedia.id === "DISCORD")
         // fail conditions
         if (!hypixelDiscord) {
-            return await interaction.reply("No Discord tag linked on Hypixel");
+            return await interaction.reply({ embeds: [discordNotLinkedOrNotMatchingEmbed] });
         } else if (hypixelDiscord.link !== `${interaction.member.user.username}#${interaction.member.user.discriminator}`) {
-            return await interaction.reply("Linked Discord tag on Hypixel does not match with your Discord tag");
+            return await interaction.reply({ embeds: [discordNotLinkedOrNotMatchingEmbed] });
         }
         // passed check
         await interaction.client.verify(interaction.member, player)

@@ -32,7 +32,7 @@ module.exports = {
         }
         await interaction.client.verify(member, player)
         await interaction.reply({ content: `${member} has been verified`, ephemeral: true });
-        if (!interaction.member.manageable) {
+        if (!member.manageable) {
             await interaction.followUp({ content: `Missing permissions to set ${member}'s nickname`, ephemeral: true });
         };
         // save to database

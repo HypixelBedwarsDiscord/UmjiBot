@@ -13,28 +13,31 @@ const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith("
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.data.name, command);
-}
+};
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
+    if (!event.active) { 
+        continue;
+    };
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
     } else {
         client.on(event.name, (...args) => event.execute(...args));
-    }
-}
+    };
+};
 
-client.hypixel = new Hypixel.Client(keys.hypixel)
+client.hypixel = new Hypixel.Client(keys.hypixel);
 
 client.db = new Pool({
     user: "postgres",
     database: "umjibot",
     password: keys.postgres
-})
+});
 
-const { verify, unverify } = require("./methods")
-client.verify = verify
-client.unverify = unverify
+const { verify, unverify } = require("./methods");
+client.verify = verify;
+client.unverify = unverify;
 
-client.login(keys.token)
+client.login(keys.token);
