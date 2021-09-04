@@ -43,9 +43,5 @@ client.db = new Pool({
     password: keys.postgres
 });
 
-const { verify, unverify } = require("./methods");
-client.verify = verify;
-client.unverify = unverify;
-
 console.log("[STARTUP] Logging into Discord..")
 client.login(keys.token);

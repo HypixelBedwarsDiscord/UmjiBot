@@ -1,7 +1,7 @@
-const { keys } = require("./config.json");
 const { stars } = require("./prestiges");
-const { roleIDs } = require("./prestiges")
-const { needUsernamesRoleID, verifiedRoleID, hypixelStaffRoleID } = require("./static")
+const { roleIDs } = require("./prestiges");
+const { needUsernamesRoleID, verifiedRoleID, hypixelStaffRoleID } = require("./static");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     async verify(member, player) {
@@ -24,12 +24,12 @@ module.exports = {
         };
         // hypixel staff roles (not yet fully sure how this works yet)
         // if (player.rank.equals("Admin") || player.rank.equals("Game Master")) {
-            
+
         // };
         await member.roles.remove(needUsernamesRoleID);
         await member.roles.add(verifiedRoleID);
     },
-    
+
     async unverify(member) {
         for (const role of roleIDs) {
             if (!member.roles.cache.has(role)) continue;
@@ -38,5 +38,12 @@ module.exports = {
         await member.roles.add(needUsernamesRoleID);
         await member.roles.remove(verifiedRoleID);
         await member.setNickname(null);
+    },
+
+    ignDoesNotExistEmbed(ign) {
+        return new MessageEmbed()
+            .setTitle("Player not found")
+            .setDescription(`A Minecraft account with the IGN \`${ign}\` does not exist`)
+            .setColor("DARK_RED")
     }
 }

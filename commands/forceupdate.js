@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { guildID, staffRoleID, verificationLogsChannelID } = require("../static");
+const { verify } = require("../methods");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -33,7 +34,7 @@ module.exports = {
         } catch (error) {
             return await interaction.reply({ content: "UUID does not exist (???)", ephemeral: true });
         }
-        await interaction.client.verify(member, player)
+        await verify(member, player)
         await interaction.reply({ content: `${member}'s roles and nickname have been updated`, ephemeral: true })
         if (!member.manageable) {
             await interaction.followUp({ content: `Missing permissions to set ${member}'s nickname`, ephemeral: true })

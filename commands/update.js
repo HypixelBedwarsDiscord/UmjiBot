@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const { guildID, verificationLogsChannelID } = require("../static")
+const { guildID, verificationLogsChannelID } = require("../static");
+const { verify } = require("../methods");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,9 +22,10 @@ module.exports = {
         try {
             player = await interaction.client.hypixel.getPlayer(uuid)
         } catch (error) {
+            console.log(`[ERROR] UUID ${uuid} does not exist (This error should be impossible)`);
             return await interaction.reply({ content: "UUID does not exist (???)", ephemeral: true });
         }
-        await interaction.client.verify(interaction.member, player);
+        await verify(interaction.member, player);
         await interaction.reply({ content: "Your roles and nickname have been updated", ephemeral: true })
         if (!interaction.member.manageable) {
             await interaction.followUp({ content: "Missing permissions to set your nickname", ephemeral: true })

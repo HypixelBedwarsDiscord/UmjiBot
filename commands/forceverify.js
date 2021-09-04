@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { guildID, staffRoleID, verificationLogsChannelID } = require("../static");
+const { verify, ignDoesNotExistEmbed } = require("../methods");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -28,9 +29,9 @@ module.exports = {
         try {
             player = await interaction.client.hypixel.getPlayer(ign)
         } catch (error) {
-            return await interaction.reply({ content: "IGN does not exist", ephemeral: true });
+            return await interaction.reply({ embeds: [ignDoesNotExistEmbed(player.nickname)] });
         }
-        await interaction.client.verify(member, player)
+        await verify(member, player)
         await interaction.reply({ content: `${member} has been verified`, ephemeral: true });
         if (!member.manageable) {
             await interaction.followUp({ content: `Missing permissions to set ${member}'s nickname`, ephemeral: true });

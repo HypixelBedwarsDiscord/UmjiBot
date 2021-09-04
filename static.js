@@ -10,5 +10,5 @@ module.exports = {
     supportTeamRoleID: "459841215945375757",
     hypixelStaffRoleID: "416614910299209738",
     verificationLogsChannelID: "672475663994716178",
-    ticketCategoryChannelID: "459835600913039360"
+    ticketCategoryChannelID: "459835600913039360",
 };

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { guildID, staffRoleID, verificationLogsChannelID } = require("../static");
+const { unverify } = require("../methods");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,7 +20,7 @@ module.exports = {
             return await interaction.reply({ content: "You do not have sufficient permissions to use this command", ephemeral: true });
         }
         const member = interaction.guild.members.cache.get(interaction.options.getUser("member").id);
-        await interaction.client.unverify(member);
+        await unverify(member);
         await interaction.reply({ content: `${member} has been force unverified`, ephemeral: true });
         if (!member.manageable) {
             await interaction.followUp({ content: `Missing permissions to reset ${member}'s nickname`, ephemeral: true });
