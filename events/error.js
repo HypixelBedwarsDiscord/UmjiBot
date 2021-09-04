@@ -6,4 +6,4 @@ module.exports = {
     execute(error) {
         console.log(`[ERROR] [${moment().format("M/D/Y - h:m:s A")}] ${error}`);
     }
-}
+};

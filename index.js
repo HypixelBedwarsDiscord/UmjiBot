@@ -6,7 +6,7 @@ const Hypixel = require("hypixel-api-reborn");
 const { Pool } = require("pg");
 
 const intents = new Intents(32767); // all intents
-const client = new Client({ intents: intents, makeCache: Options.cacheEverything()});
+const client = new Client({ intents: intents, makeCache: Options.cacheEverything() });
 
 console.log("[STARTUP] Initializing..")
 
@@ -23,7 +23,7 @@ const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'
 console.log("[EVENTS] Registering events..")
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
-    if (!event.active) { 
+    if (!event.active) {
         continue;
     };
     if (event.once) {
@@ -43,5 +43,5 @@ client.db = new Pool({
     password: keys.postgres
 });
 
-console.log("[STARTUP] Logging into Discord..")
+console.log("[STARTUP] Logging into Discord..");
 client.login(keys.token);
