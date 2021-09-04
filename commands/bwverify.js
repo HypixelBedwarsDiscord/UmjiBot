@@ -36,6 +36,7 @@ module.exports = {
         } catch (error) {
             return await interaction.reply({ embeds: [ignDoesNotExistEmbed(ign)] });
         }
+        // check if given ign (uuid) already in database
         const result = await interaction.client.db.query("SELECT * FROM users WHERE uuid = $1", [player.uuid])
         if (result.rows[0]) {
             return await interaction.reply({ embeds: [accountAlreadyVerifiedEmbed(player.nickname)] });
@@ -49,12 +50,13 @@ module.exports = {
         }
         // passed check
         await verify(interaction.member, player)
+        // save to database
+        await interaction.client.db.query("INSERT INTO users(id, uuid) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET uuid = $2", [BigInt(interaction.member.id), player.uuid]);
+        // reply
         await interaction.reply({ content: "You have been verified", ephemeral: true });
         if (!interaction.member.manageable) {
             await interaction.followUp({ content: "Missing permissions to set your nickname", ephemeral: true });
         };
-        // save to database
-        await interaction.client.db.query("INSERT INTO users(id, uuid) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET uuid = $2", [BigInt(interaction.member.id), player.uuid]);
         // log to channel
         const logEmbed = new MessageEmbed()
             .setTitle("Member Verified")

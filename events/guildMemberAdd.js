@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { guildID, verificationChannelID, verificationLogsChannelID } = require("../static");
+const { guildID, verificationChannelID, verificationLogsChannelID, needUsernamesRoleID } = require("../static");
 const { verify } = require("../methods");
 
 const welcomeEmbed = new MessageEmbed()
@@ -41,6 +41,7 @@ module.exports = {
         } catch (error) {
             console.log(`[ERROR] Cannot send DMs to ${member.user.username}#${member.user.discriminator}`);
         }
+        await member.roles.add(needUsernamesRoleID);
         await member.guild.channels.cache.get(verificationChannelID).send({ content: member.toString(), embeds: [welcomeEmbed] });
     }
 };
