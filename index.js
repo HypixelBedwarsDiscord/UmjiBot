@@ -1,9 +1,10 @@
 const fs = require("fs")
-const { Client, Intents, Collection, Options } = require("discord.js");
-const { keys } = require("./config.json");
 
+const { Client, Intents, Collection, Options } = require("discord.js");
 const Hypixel = require("hypixel-api-reborn");
 const { Pool } = require("pg");
+
+const { keys } = require("./config.json");
 
 const intents = new Intents(32767); // all intents
 const client = new Client({ intents: intents, makeCache: Options.cacheEverything() });
