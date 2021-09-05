@@ -10,11 +10,7 @@ module.exports = {
             await command.execute(interaction);
         } catch (error) {
             console.error(error);
-            try {
-                await interaction.reply({ content: "This command failed!", ephemeral: true })
-            } catch (error) {
-                console.error(error)
-            }
+            if (!interaction.replied) await interaction.reply( {content: "This interaction failed", ephemeral: true });
         }
     }
 }

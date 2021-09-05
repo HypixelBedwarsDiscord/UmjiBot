@@ -39,8 +39,22 @@ module.exports = {
         // check if given ign (uuid) already in database
         const result = await interaction.client.db.query("SELECT * FROM users WHERE uuid = $1", [player.uuid])
         if (result.rows[0]) {
-            return await interaction.reply({ embeds: [accountAlreadyVerifiedEmbed(player.nickname)] });
-        }
+            // check if user is in the guild
+            try {
+                interaction.guild.members.fetch(result.rows[0].id);
+                console.error(
+                    `[COMMAND /bwverify] Failed verification attempt by ${interaction.member.username}#${interaction.member.user.discriminator}\n` +
+                    `[COMMAND /bwverify] UUID ${result.rows[0].uuid} already verified to member ${result.rows[0].id}`
+                )
+                return await interaction.reply({ embeds: [accountAlreadyVerifiedEmbed(player.nickname)] });
+            } catch (error) {  // error here means that the user is no longer in the guild
+                console.log(
+                    `[COMMAND /bwverify] UUID ${result.rows[0].uuid} was already verified to member ${result.rows[0].id} but they are no longer in the guild` +
+                    `[COMMAND /bwverify] Removing ${result.rows[0].id} from database`
+                )
+                await interaction.client.db.query("DELETE FROM users WHERE id = $1", [BigInt(result.rows[0].id)]);
+            };
+        };
         const hypixelDiscord = player.socialMedia.find(socialMedia => socialMedia.id === "DISCORD")
         // fail conditions
         if (!hypixelDiscord) {

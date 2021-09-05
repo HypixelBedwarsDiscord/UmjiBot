@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const { guildID, staffRoleID, verificationLogsChannelID } = require("../static");
+const { guildID, staffRoleID, verificationChannelID, verificationLogsChannelID } = require("../static");
 const { verify, ignDoesNotExistEmbed } = require("../methods");
 
 module.exports = {
@@ -17,25 +17,19 @@ module.exports = {
                 .setRequired(true)),
 
     async execute(interaction) {
-        if (interaction.guild.id !== guildID) {
-            return await interaction.reply({ content: "This command cannot be used here", ephemeral: true })
-        }
-        if (!interaction.member.roles.cache.has(staffRoleID)) {
-            return await interaction.reply({ content: "You do not have sufficient permissions to use this command", ephemeral: true });
-        }
+        if (interaction.guild.id !== guildID) return await interaction.reply({ content: "This command cannot be used here", ephemeral: true });
+        if (!interaction.member.roles.cache.has(staffRoleID)) return await interaction.reply({ content: "You do not have sufficient permissions to use this command", ephemeral: true });
         const member = interaction.guild.members.cache.get(interaction.options.getUser("member").id);
         const ign = interaction.options.getString("ign");
         let player;
         try {
             player = await interaction.client.hypixel.getPlayer(ign)
         } catch (error) {
-            return await interaction.reply({ embeds: [ignDoesNotExistEmbed(player.nickname)] });
+            return await interaction.reply({ embeds: [ignDoesNotExistEmbed(ign)] });
         }
         await verify(member, player)
         await interaction.reply({ content: `${member} has been verified`, ephemeral: true });
-        if (!member.manageable) {
-            await interaction.followUp({ content: `Missing permissions to set ${member}'s nickname`, ephemeral: true });
-        };
+        if (!member.manageable) await interaction.followUp({ content: `Missing permissions to set ${member}'s nickname`, ephemeral: true });
         // save to database
         await interaction.client.db.query("INSERT INTO users(id, uuid) VALUES($1, $2) ON CONFLICT (id) DO UPDATE SET uuid = $2", [BigInt(member.id), player.uuid]);
         // log to channel
