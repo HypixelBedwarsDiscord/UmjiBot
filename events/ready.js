@@ -5,6 +5,6 @@ module.exports = {
     once: true,
     active: true,
     execute(client) {
-        console.log(`[STARTUP] Connection established with Discord at ${moment().format("dddd, MMMM Do, Y - M/D/Y - h:m:s A")}`);
+        console.log(`[READY] Connection established with Discord at ${moment().format("dddd, MMMM Do, Y - M/D/Y - h:m:s A")}`);
     }
 }

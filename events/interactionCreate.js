@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 module.exports = {
     name: "interactionCreate",
     active: true,
@@ -9,7 +11,7 @@ module.exports = {
         try { 
             await command.execute(interaction);
         } catch (error) {
-            console.error(error);
+            console.error(`[ERROR] [${command.name}] [${moment().format("M/D/Y - h:m:s A")}] ${error}`);
             if (!interaction.replied) await interaction.reply( {content: "This interaction failed", ephemeral: true });
         }
     }

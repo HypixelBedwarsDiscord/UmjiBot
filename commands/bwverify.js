@@ -82,9 +82,9 @@ module.exports = {
                 { name: "Minecraft IGN", value: player.nickname }
             );
         await interaction.guild.channels.cache.get(verificationLogsChannelID).send({ embeds: [logEmbed] });
-        // delete messages from verified member in verification channel
+        // delete join messages and messages from verified member in verification channel
         interaction.guild.channels.cache.get(verificationChannelID).messages.fetch().then(async messages => {
-            await interaction.guild.channels.cache.get(verificationChannelID).bulkDelete(messages.filter(m => m.author.id === interaction.member.id || (m.mentions.has(interaction.member) && m.author.id === interaction.client.user.id)));
+            await interaction.guild.channels.cache.get(verificationChannelID).bulkDelete(messages.filter(m => m.author.id === interaction.member.id || (m.mentions.has(interaction.member) && m.author.id === interaction.client.user.id) || (m.interaction && m.interaction.user.id === interaction.member.id)));
         });
     }
 };

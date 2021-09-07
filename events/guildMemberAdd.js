@@ -22,7 +22,7 @@ module.exports = {
             try {
                 player = await member.client.hypixel.getPlayer(uuid)
             } catch (error) {
-                return console.log(`[ERROR] UUID ${uuid} does not exist (This error should be impossible)`);
+                return console.log(`[ERROR] [guildMemberAdd] UUID ${uuid} does not exist (This error should be impossible)`);
             }
             await verify(member, player);
             const logEmbed = new MessageEmbed()
@@ -39,7 +39,7 @@ module.exports = {
         try {
             await member.send(`Please go to the <#${verificationChannelID}> channel in **Hypixel Bedwars** and follow the instructions in the channel`);
         } catch (error) {
-            console.log(`[INFO] Cannot send DMs to ${member.user.username}#${member.user.discriminator}`);
+            console.log(`[INFO] [guildMemberAdd] Cannot send DMs to ${member.user.username}#${member.user.discriminator}`);
         }
         await member.roles.add(needUsernamesRoleID);
         await member.guild.channels.cache.get(verificationChannelID).send({ content: member.toString(), embeds: [welcomeEmbed] });
