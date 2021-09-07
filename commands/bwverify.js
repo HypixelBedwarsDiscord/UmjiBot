@@ -5,7 +5,7 @@ const { verify, ignDoesNotExistEmbed } = require("../methods");
 
 const discordNotLinkedOrNotMatchingEmbed = new MessageEmbed()
     .setTitle("Discord tag on Hypixel not linked or does not match")
-    .setDescription("To set your Discord tag on Hypixel, please follow the intructions in the GIF below, **making sure to replace the example Discord tag of `myer#0001` with your own**")
+    .setDescription("To set your Discord tag on Hypixel, please follow the instructions in the GIF below, **making sure to replace the example Discord tag of `myer#0001` with your own**")
     .setColor("DARK_RED")
     .setImage("https://static.myer.wtf/linkhypixeldiscordguide.gif")
 
@@ -84,7 +84,7 @@ module.exports = {
         await interaction.guild.channels.cache.get(verificationLogsChannelID).send({ embeds: [logEmbed] });
         // delete messages from verified member in verification channel
         interaction.guild.channels.cache.get(verificationChannelID).messages.fetch().then(async messages => {
-            await interaction.guild.channels.cache.get(verificationChannelID).bulkDelete(messages.filter(m => m.author.id === interaction.member.id));
+            await interaction.guild.channels.cache.get(verificationChannelID).bulkDelete(messages.filter(m => m.author.id === interaction.member.id || (m.mentions.has(interaction.member) && m.author.id === interaction.client.user.id)));
         });
     }
 };

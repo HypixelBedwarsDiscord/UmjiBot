@@ -1,9 +1,7 @@
-const { MessageEmbed } = require("discord.js");
-
 module.exports = {
     ownerID: "368780147563823114",
     guildID: "384804710110199809",
-    verificationChannelID: "422259585798242314",
+    verificationChannelID: "881673457602011196",
     needUsernamesRoleID: "480448464220585984",
     verifiedRoleID: "840265827831382076",
     staffRoleID: "724465434358841384",

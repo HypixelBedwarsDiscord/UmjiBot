@@ -24,9 +24,7 @@ const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'
 console.log("[EVENTS] Registering events..")
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
-    if (!event.active) {
-        continue;
-    };
+    if (!event.active) continue;
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
         console.log(`[EVENTS] One time event ${event.name} registered`);

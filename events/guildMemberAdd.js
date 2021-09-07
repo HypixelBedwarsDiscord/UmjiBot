@@ -39,7 +39,7 @@ module.exports = {
         try {
             await member.send(`Please go to the <#${verificationChannelID}> channel in **Hypixel Bedwars** and follow the instructions in the channel`);
         } catch (error) {
-            console.log(`[ERROR] Cannot send DMs to ${member.user.username}#${member.user.discriminator}`);
+            console.log(`[INFO] Cannot send DMs to ${member.user.username}#${member.user.discriminator}`);
         }
         await member.roles.add(needUsernamesRoleID);
         await member.guild.channels.cache.get(verificationChannelID).send({ content: member.toString(), embeds: [welcomeEmbed] });
