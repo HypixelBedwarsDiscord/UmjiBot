@@ -45,7 +45,7 @@ module.exports = {
         await interaction.guild.channels.cache.get(verificationLogsChannelID).send({ embeds: [logEmbed] });
         // delete messages from verified member in verification channel
         interaction.guild.channels.cache.get(verificationChannelID).messages.fetch().then(async messages => {
-            await interaction.guild.channels.cache.get(verificationChannelID).bulkDelete(messages.filter(m => m.author.id === member.id));
+            await interaction.guild.channels.cache.get(verificationChannelID).bulkDelete(messages.filter(m => m.author.id === member.id || (m.mentions.has(member) && m.author.id === interaction.client.user.id)));
         });
     }
 };
