@@ -20,6 +20,7 @@ module.exports = {
         if (interaction.guild.id !== guildID) return await interaction.reply({ content: "This command cannot be used here", ephemeral: true });
         if (!interaction.member.roles.cache.has(staffRoleID)) return await interaction.reply({ content: "You do not have sufficient permissions to use this command", ephemeral: true });
         const member = interaction.guild.members.cache.get(interaction.options.getUser("member").id);
+        if (!member) return await interaction.reply({ content: "Unknown member", ephemeral: true });
         const ign = interaction.options.getString("ign");
         let player;
         try {

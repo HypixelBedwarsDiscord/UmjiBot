@@ -9,10 +9,10 @@ const discordNotLinkedOrNotMatchingEmbed = new MessageEmbed()
     .setColor("DARK_RED")
     .setImage("https://static.myer.wtf/linkhypixeldiscordguide.gif")
 
-function accountAlreadyVerifiedEmbed(ign) {
+function accountAlreadyVerifiedEmbed(ign, member) {
     return new MessageEmbed()
         .setTitle("Account already verified")
-        .setDescription(`The IGN \`${ign}\` is already verified to another account. If you believe this is an error, please ping a staff member`)
+        .setDescription(`The IGN \`${ign}\` is already verified to another Discord account (${member}). If you believe this is an error, please ping a staff member`)
         .setColor("DARK_RED")
 };
 
@@ -41,12 +41,14 @@ module.exports = {
         if (result.rows[0]) {
             // check if user is in the guild
             try {
-                interaction.guild.members.fetch(result.rows[0].id);
-                console.error(
-                    `[COMMAND /bwverify] Failed verification attempt by ${interaction.member.username}#${interaction.member.user.discriminator}\n` +
-                    `[COMMAND /bwverify] UUID ${result.rows[0].uuid} already verified to member ${result.rows[0].id}`
-                )
-                return await interaction.reply({ embeds: [accountAlreadyVerifiedEmbed(player.nickname)] });
+                const member = await interaction.guild.members.fetch(result.rows[0].id);
+                if (member.id !== interaction.member.id) {
+                    console.error(
+                        `[COMMAND /bwverify] Failed verification attempt by ${interaction.member.username}#${interaction.member.user.discriminator}\n` +
+                        `[COMMAND /bwverify] UUID ${result.rows[0].uuid} already verified to member ${result.rows[0].id}`
+                    )
+                    return await interaction.reply({ embeds: [accountAlreadyVerifiedEmbed(player.nickname, member)] });
+                }
             } catch (error) {  // error here means that the user is no longer in the guild
                 console.log(
                     `[COMMAND /bwverify] UUID ${result.rows[0].uuid} was already verified to member ${result.rows[0].id} but they are no longer in the guild` +

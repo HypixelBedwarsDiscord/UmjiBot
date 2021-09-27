@@ -20,6 +20,7 @@ module.exports = {
             return await interaction.reply({ content: "You do not have sufficient permissions to use this command", ephemeral: true });
         }
         const member = interaction.guild.members.cache.get(interaction.options.getUser("member").id);
+        if (!member) return await interaction.reply({ content: "Unknown member", ephemeral: true });
         await unverify(member);
         await interaction.reply({ content: `${member} has been force unverified`, ephemeral: true });
         if (!member.manageable) {
