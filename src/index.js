@@ -1,10 +1,10 @@
 const fs = require("fs")
 
-const { Client, Intents, Collection, Options } = require("discord.js");
+const { Client, Intents, Collection, Options, CommandInteraction } = require("discord.js");
 const Hypixel = require("hypixel-api-reborn");
 const { Pool } = require("pg");
 
-const { keys } = require("./config.json");
+const { keys } = require("../config.json");
 
 const intents = new Intents(32767); // all intents
 const client = new Client({ intents: intents, makeCache: Options.cacheEverything() });
@@ -16,6 +16,7 @@ const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith("
 console.log("[COMMANDS] Loading commands..")
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
+    if (!command.enabled) continue;
     client.commands.set(command.data.name, command);
     console.log(`[COMMANDS] /${command.data.name} loaded`)
 };

@@ -4,6 +4,7 @@ const { guildID, verificationLogsChannelID } = require("../static");
 const { verify } = require("../methods");
 
 module.exports = {
+    enabled: true,
     data: new SlashCommandBuilder()
         .setName("update")
         .setDescription("Update user roles and nickname based on Minecraft UUID from database"),

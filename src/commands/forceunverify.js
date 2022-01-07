@@ -4,6 +4,7 @@ const { guildID, staffRoleID, verificationLogsChannelID } = require("../static")
 const { unverify } = require("../methods");
 
 module.exports = {
+    enabled: true,
     data: new SlashCommandBuilder()
         .setName("forceunverify")
         .setDescription("Force unverifies user, removing appropriate roles, resetting nickname, and remove UUID from database")

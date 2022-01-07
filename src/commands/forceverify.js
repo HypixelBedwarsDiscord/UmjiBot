@@ -4,6 +4,7 @@ const { guildID, staffRoleID, verificationChannelID, verificationLogsChannelID }
 const { verify, ignDoesNotExistEmbed } = require("../methods");
 
 module.exports = {
+    enabled: true,
     data: new SlashCommandBuilder()
         .setName("forceverify")
         .setDescription("Force verifies user, giving appropriate roles, setting nickname, and saving UUID to database")

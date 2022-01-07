@@ -17,6 +17,7 @@ function accountAlreadyVerifiedEmbed(ign, member) {
 };
 
 module.exports = {
+    enabled: true,
     data: new SlashCommandBuilder()
         .setName("bwverify")
         .setDescription("Verifies user, giving appropriate roles, setting nickname, and saving UUID to database")
