@@ -2,7 +2,6 @@ const { guildID, verificationChannelID } = require("../static");
 
 module.exports = {
     name: "guildMemberRemove",
-    active: true,
     execute(member) {
         if (member.guild.id !== guildID) return;
         member.guild.channels.cache.get(verificationChannelID).messages.fetch().then(async messages => {

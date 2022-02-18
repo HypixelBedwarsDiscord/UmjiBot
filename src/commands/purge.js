@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { guildID, staffRoleID } = require("../static");
 
 module.exports = {
-    enabled: true,
     data: new SlashCommandBuilder()
         .setName("purge")
         .setDescription("Purges messages from a channel")

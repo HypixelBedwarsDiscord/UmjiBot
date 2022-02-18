@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { guildID, staffRoleID } = require("../static");
 
 module.exports = {
-    enabled: false,
+    disabled: true,
     data: new SlashCommandBuilder()
         .setName("mute")
         .setDescription("Mutes member")

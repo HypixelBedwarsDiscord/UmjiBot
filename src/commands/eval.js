@@ -3,7 +3,6 @@ const { MessageEmbed } = require("discord.js");
 const { ownerID } = require("../static")
 
 module.exports = {
-    enabled: true,
     data: new SlashCommandBuilder()
         .setName("eval")
         .setDescription("haha nice try")

@@ -16,7 +16,7 @@ const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith("
 console.log("[COMMANDS] Loading commands..")
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    if (!command.enabled) continue;
+    if (command.disabled) continue;
     client.commands.set(command.data.name, command);
     console.log(`[COMMANDS] /${command.data.name} loaded`)
 };
@@ -25,7 +25,7 @@ const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'
 console.log("[EVENTS] Registering events..")
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
-    if (!event.active) continue;
+    if (event.disabled) continue;
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
         console.log(`[EVENTS] One time event ${event.name} registered`);

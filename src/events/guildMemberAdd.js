@@ -10,7 +10,6 @@ const welcomeEmbed = new MessageEmbed()
 
 module.exports = {
     name: "guildMemberAdd",
-    active: true,
     async execute(member) {
         if (member.guild.id !== guildID) return;
         // const result = await member.client.db.query("SELECT * FROM users WHERE id = $1", [BigInt(member.id)]);

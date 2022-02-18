@@ -2,7 +2,6 @@ const moment = require("moment");
 
 module.exports = {
     name: "interactionCreate",
-    active: true,
     async execute(interaction) {
         if (!interaction.isCommand) return;
         const command = interaction.client.commands.get(interaction.commandName);
