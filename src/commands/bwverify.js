@@ -43,16 +43,16 @@ module.exports = {
             try {
                 const member = await interaction.guild.members.fetch(result.rows[0].id);
                 if (member.id !== interaction.member.id) {
-                    console.error(
-                        `[COMMAND /bwverify] Failed verification attempt by ${interaction.member.username}#${interaction.member.user.discriminator}\n` +
-                        `[COMMAND /bwverify] UUID ${result.rows[0].uuid} already verified to member ${result.rows[0].id}`
+                    console.log(
+                        `[commands/bwverify.js] Failed verification attempt by ${interaction.member.user.username}#${interaction.member.user.discriminator}\n` +
+                        `[commands/bwverify.js] UUID ${result.rows[0].uuid} already verified to member ${result.rows[0].id}`
                     )
                     return await interaction.reply({ embeds: [accountAlreadyVerifiedEmbed(player.nickname, member)] });
                 }
             } catch (error) {  // error here means that the user is no longer in the guild
                 console.log(
-                    `[COMMAND /bwverify] UUID ${result.rows[0].uuid} was already verified to member ${result.rows[0].id} but they are no longer in the guild` +
-                    `[COMMAND /bwverify] Removing ${result.rows[0].id} from database`
+                    `[commands/bwverify.js] UUID ${result.rows[0].uuid} was already verified to member ${result.rows[0].id} but they are no longer in the guild\n` +
+                    `[commands/bwverify.js] Removing ${result.rows[0].id} from database`
                 )
                 await interaction.client.db.query("DELETE FROM users WHERE id = $1", [BigInt(result.rows[0].id)]);
             };

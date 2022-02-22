@@ -4,6 +4,6 @@ module.exports = {
     name: "error",
     disabled: true,
     execute(error) {
-        console.log(`[ERROR] [${moment().format("M/D/Y - h:m:s A")}] ${error}`);
+        console.error(`[ERROR] [events/error.js] [${moment().format("M/D/Y - h:m:s A")}] ${error.stack}`);
     }
 };

@@ -22,7 +22,7 @@ module.exports = {
         try {
             player = await interaction.client.hypixel.getPlayer(uuid)
         } catch (error) {
-            console.log(`[ERROR] UUID ${uuid} does not exist (This error should be impossible)`);
+            console.error(`[ERROR] [COMMAND /update] UUID ${uuid} does not exist (This error should be impossible)`);
             return await interaction.reply({ content: "UUID does not exist (???)", ephemeral: true });
         }
         await verify(interaction.member, player);

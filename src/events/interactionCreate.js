@@ -10,7 +10,7 @@ module.exports = {
         try { 
             await command.execute(interaction);
         } catch (error) {
-            console.error(`[ERROR] [${command.name}] [${moment().format("M/D/Y - h:m:s A")}] ${error}`);
+            console.error(`[ERROR] [/${command.data.name}] [${moment().format("M/D/Y - h:m:s A")}] ${error.stack}`);
             if (!interaction.replied) await interaction.reply( {content: "This interaction failed", ephemeral: true });
         }
     }
