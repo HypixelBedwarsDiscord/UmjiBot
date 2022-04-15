@@ -7,6 +7,7 @@ module.exports = {
     staffRoleID: "724465434358841384",
     supportTeamRoleID: "459841215945375757",
     hypixelStaffRoleID: "416614910299209738",
+    timeoutLogsChannelID: "947029940249985044",
     verificationLogsChannelID: "672475663994716178",
     ticketCategoryChannelID: "459835600913039360",
 };
