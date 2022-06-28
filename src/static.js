@@ -8,6 +8,10 @@ module.exports = {
     supportTeamRoleID: "459841215945375757",
     hypixelStaffRoleID: "416614910299209738",
     timeoutLogsChannelID: "947029940249985044",
+    scamLinkLogsChannelID: "969470283591348234",
+    copypastaLogsChannelID: "975596867134062622",
     verificationLogsChannelID: "672475663994716178",
     ticketCategoryChannelID: "459835600913039360",
+    applicationCategoryChannelID: "878867363657826394",
+    devChannelID: "889966137322897488",
 };

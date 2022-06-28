@@ -1,3 +1,4 @@
+const moment = require("moment");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { guildID, verificationLogsChannelID, verificationChannelID } = require("../static");
@@ -34,6 +35,7 @@ module.exports = {
         try {
             player = await interaction.client.hypixel.getPlayer(ign)
         } catch (error) {
+            console.info(`[DEBUG] [commands/bwverify.js] [${moment().format("M/D/Y - h:m:s A")}] ${error.stack}`);
             return await interaction.reply({ embeds: [ignDoesNotExistEmbed(ign)] });
         }
         // check if given ign (uuid) already in database

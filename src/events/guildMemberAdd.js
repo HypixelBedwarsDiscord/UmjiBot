@@ -12,6 +12,7 @@ module.exports = {
     name: "guildMemberAdd",
     async execute(member) {
         if (member.guild.id !== guildID) return;
+        if (member.user.bot) return;
         // const result = await member.client.db.query("SELECT * FROM users WHERE id = $1", [BigInt(member.id)]);
         // if (result.rows[0]) {
         //     const uuid = result.rows[0].uuid
