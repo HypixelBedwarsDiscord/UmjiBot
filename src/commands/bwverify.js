@@ -1,6 +1,6 @@
 const moment = require("moment");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, InteractionCollector } = require("discord.js");
 const { guildID, verificationLogsChannelID, verificationChannelID } = require("../static");
 const { verify, ignDoesNotExistEmbed } = require("../methods");
 
@@ -60,10 +60,13 @@ module.exports = {
             };
         };
         const hypixelDiscord = player.socialMedia.find(socialMedia => socialMedia.id === "DISCORD")
+        console.log(interaction.member.user.username);
+        console.log(interaction.member.user.discriminator);
+        console.log(hypixelDiscord.link);
         // fail conditions
         if (!hypixelDiscord) {
             return await interaction.reply({ embeds: [discordNotLinkedOrNotMatchingEmbed] });
-        } else if (hypixelDiscord.link !== `${interaction.member.user.username}#${interaction.member.user.discriminator}`) {
+        } else if ((interaction.member.user.discriminator === "0" && hypixelDiscord.link !== interaction.member.user.username) || (interaction.member.user.discriminator !== "0" && hypixelDiscord.link !== `${interaction.member.user.username}#${interaction.member.user.discriminator}`)) {
             return await interaction.reply({ embeds: [discordNotLinkedOrNotMatchingEmbed] });
         }
         // passed check
